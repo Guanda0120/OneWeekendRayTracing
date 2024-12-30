@@ -17,3 +17,8 @@
 一种是仅有头文件的类和对象，防止重复编译。
 另一种是提示编译器这个是一个常用到的函数，可以直接把他放到调用的地方，防止调用开销。  
 `inline` 必须放在头文件当中。
+
+## Export a ppm Image
+```Powershell
+ .\build\one_weekend_ray_tracing.exe | set-content image.ppm -encoding  String
+```

@@ -1,3 +1,0 @@
-"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\one_weekend_ray_tracing.dir/objects.a
-C:\PROGRA~1\LLVM\bin\llvm-ar.exe qc CMakeFiles\one_weekend_ray_tracing.dir/objects.a @CMakeFiles\one_weekend_ray_tracing.dir\objects1.rsp
-C:\PROGRA~1\LLVM\bin\CLANG_~1.EXE --target=x86_64-w64-mingw32 -g -Wl,--whole-archive CMakeFiles\one_weekend_ray_tracing.dir/objects.a -Wl,--no-whole-archive -o one_weekend_ray_tracing.exe -Wl,--out-implib,libone_weekend_ray_tracing.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\one_weekend_ray_tracing.dir\linkLibs.rsp
