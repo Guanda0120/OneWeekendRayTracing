@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/12748/Desktop/Learning/OneWeekendRayTracing/src
+# Install script for directory: D:/OneWeekendRayTracing/src
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -32,7 +32,7 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
   set(CMAKE_CROSSCOMPILING "FALSE")
 endif()
 
-# Set path to fallback-tool for dependency-resolution.
+# Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
   set(CMAKE_OBJDUMP "C:/Program Files/LLVM/bin/llvm-objdump.exe")
 endif()
