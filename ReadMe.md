@@ -22,3 +22,25 @@
 ```Powershell
  .\build\one_weekend_ray_tracing.exe | set-content image.ppm -encoding  String
 ```
+
+## Constructor
+```c++
+class MyClass {
+public:
+    MyClass(SomeType obj) : obj_(obj) {}
+};
+
+class MyClass {
+public:
+    MyClass(SomeType& obj) : obj_(obj) {}
+};
+```
+
+两者的主要差别
+| 特性             | SomeType& obj               | SomeType obj               |
+|------------------|-----------------------------|----------------------------|
+| 是否拷贝对象     | 不拷贝，直接引用传入对象    | 会拷贝传入对象             |
+| 成员变量类型     | 引用（SomeType&）           | 独立对象（SomeType）       |
+| 性能开销         | 性能高，没有拷贝            | 性能较低，需要拷贝传入对象 |
+| 生命周期要求     | 需要确保传入对象的生命周期比类实例长 | 不依赖传入对象的生命周期   |
+| 修改传入对象     | 会影响原始对象              | 不会影响原始对象           |

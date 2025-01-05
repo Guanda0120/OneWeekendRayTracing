@@ -24,10 +24,18 @@ class vec3 {
     vec3& operator+=(const vec3& v);
     /* get the length of the vector */
     double length() const;
+    /// @brief Make the vector self unit vector
+    void normalize_vec();
+    /// @brief print this vector
+    void stream_out();
+
+    double x();
+    double y();
+    double z();
 };
 
 inline std::ostream& operator<<(std::ostream& out, const vec3& v){
-  out<<v.e[0]<<' '<<v.e[1]<<' '<<v.e[2];
+  return out<<v.e[0]<<' '<<v.e[1]<<' '<<v.e[2];
 };
 
 inline vec3 operator+(const vec3& u, const vec3& v){

@@ -7,11 +7,9 @@
             "command": "cmake",
             "args": [
                 "-G", "MinGW Makefiles",
-                "-DCMAKE_C_COMPILER=C:/Program Files/LLVM/bin/clang.exe",
-                "-DCMAKE_CXX_COMPILER=C:/Program Files/LLVM/bin/clang++.exe",
+                "-DCMAKE_C_COMPILER=C:/mingw64/bin/gcc.exe",
+                "-DCMAKE_CXX_COMPILER=C:/mingw64/bin/g++.exe",
                 "-DCMAKE_RC_COMPILER=C:/MinGW/bin/windres.exe",
-                "-DCMAKE_C_FLAGS=--target=x86_64-w64-mingw32",
-                "-DCMAKE_CXX_FLAGS=--target=x86_64-w64-mingw32",
                 "-DCMAKE_BUILD_TYPE=Debug",
                 "-S", "${workspaceFolder}",
                 "-B", "${workspaceFolder}/build"

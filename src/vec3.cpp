@@ -27,5 +27,28 @@ vec3& vec3::operator+=(const vec3& v) {
 }
 
 double vec3::length() const{
-  std::sqrt(this->e[0]*this->e[0] + this->e[1]*this->e[1] + this->e[2]*this->e[2]);
+  return std::sqrt(this->e[0]*this->e[0] + this->e[1]*this->e[1] + this->e[2]*this->e[2]);
+}
+
+void vec3::normalize_vec(){
+  double len = this->length();
+  this->e[0]/=len;
+  this->e[1]/=len;
+  this->e[2]/=len;
+}
+
+void vec3::stream_out(){
+  std::cout<<'('<<e[0]<<','<<e[1]<<','<<e[2]<<')'<<std::endl;
+}
+
+double vec3::x(){
+  return e[0];
+}
+
+double vec3::y(){
+  return e[1];
+}
+
+double vec3::z(){
+  return e[2];
 }
