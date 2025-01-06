@@ -15,6 +15,7 @@ set(SRC_FILES
     image.cpp
     ray.cpp
     vec3.cpp
+    sphere.cpp
 )
 
 # 创建一个静态库或共享库，视你的需求而定

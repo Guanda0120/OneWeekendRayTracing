@@ -21,7 +21,8 @@
         {
             "name": "includePath",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "C://Program Files (x86)//libpng//include//libpng16"
             ],
             "defines": [
                 "_DEBUG",

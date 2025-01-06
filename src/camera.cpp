@@ -1,7 +1,7 @@
 #include "camera.h"
 
-camera::camera(const canvas& canvas, double v_width, double far_plane_d):
-  viewport_width_(v_width), far_plane_dist_(far_plane_d)
+camera::camera(const canvas& canvas, const hittable& hit, double v_width, double far_plane_d):
+  viewport_width_(v_width), far_plane_dist_(far_plane_d), entity_(hit)
 {
   
   this->location_ = vec3(0.0,0.0,0.0);

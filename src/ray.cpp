@@ -5,14 +5,14 @@ ray::ray(vec3& origin, vec3& direc):
 
 ray::~ray(){}
 
-const vec3& ray::origin(){
+vec3& ray::origin() const{
   return this->origin_;
 }
 
-const vec3& ray::direction(){
+vec3& ray::direction() const{
   return this->direc_;
 }
 
-const vec3 ray::at(double t){
+vec3 ray::at(double t) const {
   return this->origin_+t*this->direc_;
 }

@@ -13,14 +13,14 @@ class ray{
     ~ray();
     /// @brief Get Origin Attr
     /// @return vec3 it self
-    const vec3& origin();
+    vec3& origin() const;
     /// @brief 
     /// @return 
-    const vec3& direction();
+    vec3& direction() const;
     /// @brief 
     /// @param t 
     /// @return 
-    const vec3 at(double t);
+    vec3 at(double t) const;
   private:
     /// @brief The Origin and Direction of Ray
     vec3& origin_;

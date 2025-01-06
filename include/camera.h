@@ -5,10 +5,11 @@
 #include "vec3.h"
 #include "canvas.h"
 #include "image.h"
+#include "hittable.h"
 
 class camera{
   public:
-    camera(const canvas& canvas, double v_width, double far_plane_d);
+    camera(const canvas& canvas, const hittable& entity, double v_width, double far_plane_d);
     image render();
   private:
     /// @brief The Loaction of camera
@@ -35,6 +36,8 @@ class camera{
     int pixel_width_;
     /// @brief The Height pixel count
     int pixel_height_;
+    /// @brief A hittable entity
+    hittable& entity_;
 };
 
 #endif
