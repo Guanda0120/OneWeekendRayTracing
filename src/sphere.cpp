@@ -13,31 +13,19 @@ sphere::~sphere() = default;
 /// @param rec 
 /// @return 
 bool sphere::hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const {
-  // This algorithm may have this bug
-  /**
-   * If the camera is inside the sphere, and it have two root
-   * the abs of neg factor is larger than pos one
-   * this will consider to be a false case
-   * Indeed it is a true one
-   * vec3 vec_sphere = this->center - r.origin();
-   * Project the vec to ray direc
-   * double factor =  dot(vec_sphere, r.direction());
-   * vec3 dist_vec = vec_sphere-factor*r.direction();
-   * double dist = dist_vec.length();
-   */
-  
-  vec3 vec_sphere = this->center - r.origin();
+
+  vec3 vec_sphere = this->center-r.origin();
   // Project the vec to ray direc
-  double factor =  dot(vec_sphere, r.direction());
+  double factor = dot(vec_sphere, r.direction());
   vec3 dist_vec = vec_sphere-factor*r.direction();
   double dist = dist_vec.length();
   if (dist<=this->radius && factor>0){
-    // Get the inter point 
-    point near_inter;
+    double t = std::sqrt(this->radius*this->radius-dist*dist);
     // 
-    rec.p = near_inter;
-    rec.normal = near_inter-this->center;
-    rec.t = 10.;
+    rec.p = r.direction()*-t+dist_vec+this->center;
+    rec.normal = rec.p-this->center;
+    rec.normal.normalize_vec();
+    rec.t = (rec.p-r.origin()).length();
     return true;
   } 
   return false;

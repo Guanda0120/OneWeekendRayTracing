@@ -9,8 +9,8 @@
 
 class camera{
   public:
-    camera(const canvas& canvas, const hittable& entity, double v_width, double far_plane_d);
-    image render();
+    camera(const canvas& canvas, double v_width, double far_plane_d);
+    image render(const hittable& entity);
   private:
     /// @brief The Loaction of camera
     vec3 location_;
@@ -36,8 +36,6 @@ class camera{
     int pixel_width_;
     /// @brief The Height pixel count
     int pixel_height_;
-    /// @brief A hittable entity
-    hittable& entity_;
 };
 
 #endif
