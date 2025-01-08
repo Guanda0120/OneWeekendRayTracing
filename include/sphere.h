@@ -12,7 +12,7 @@ class sphere: public hittable
     point center;
 
   public:
-    sphere(double r, point& center);
+    sphere(const point& c, double r);
     bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const override ;
     ~sphere();
 };

@@ -6,11 +6,15 @@
 #include "canvas.h"
 #include "image.h"
 #include "hittable.h"
+#include "hittable_list.h"
+
 
 class camera{
   public:
     camera(const canvas& canvas, double v_width, double far_plane_d);
     image render(const hittable& entity);
+    image render(const hittable_list& entities);
+
   private:
     /// @brief The Loaction of camera
     vec3 location_;

@@ -1,7 +1,7 @@
 #include "sphere.h"
 
 
-sphere::sphere(double r, point& c):
+sphere::sphere(const point& c, double r):
   radius(r), center(c) {};
 
 sphere::~sphere() = default;
@@ -26,6 +26,7 @@ bool sphere::hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec
     rec.normal = rec.p-this->center;
     rec.normal.normalize_vec();
     rec.t = (rec.p-r.origin()).length();
+    rec.front_face = dot(rec.normal, r.direction())<0;
     return true;
   } 
   return false;
