@@ -12,12 +12,12 @@ void hittable_list::clear(){
   this->objects.clear();
 };
 
-bool hittable_list::hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const {
-  double dist=ray_tmax;
+bool hittable_list::hit(const ray& r, interval domain, hit_record& rec) const {
+  double dist=domain.max;
   bool is_hit=false;
   hit_record tmp_rec;
   for(const auto& hittable_obj: this->objects){
-    bool is_hit_inside = hittable_obj->hit(r, ray_tmin, ray_tmax, tmp_rec);
+    bool is_hit_inside = hittable_obj->hit(r, domain, tmp_rec);
     if (is_hit_inside && tmp_rec.t<=dist){
       rec = tmp_rec;
       is_hit = true;

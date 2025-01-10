@@ -2,11 +2,11 @@
 #define CAMERA_H
 
 #include<iostream>
-#include "vec3.h"
 #include "canvas.h"
 #include "image.h"
 #include "hittable.h"
 #include "hittable_list.h"
+#include "rt_constance.h"
 
 
 class camera{
@@ -40,6 +40,28 @@ class camera{
     int pixel_width_;
     /// @brief The Height pixel count
     int pixel_height_;
+    /// @brief msaa param
+    int sample_level_;
+    /// @brief Using MSAA Multi Sampling Anti Alias
+    /// @param entities 
+    /// @param i 
+    /// @param j 
+    /// @return 
+    color multi_sample_aliase(const hittable_list& entities, int i, int j, int sample_level) const;
+    /// @brief 
+    /// @param entities 
+    /// @param i 
+    /// @param j 
+    /// @return 
+    color random_ray_aliase(const hittable_list& entities, int i, int j) const;
+    /// @brief Every pixel eject how much ray
+    int sample_per_pixel_;
+    /// @brief In for loop depends on i,j gives random shift ray
+    /// @param i 
+    /// @param j 
+    /// @return a ray
+    ray get_ray(int i, int j) const;
+    color cal_pixel_color_(const hittable_list& entities, const ray& r) const;
 };
 
 #endif

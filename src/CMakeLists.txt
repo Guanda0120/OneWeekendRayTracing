@@ -17,6 +17,7 @@ set(SRC_FILES
     vec3.cpp
     sphere.cpp
     hittable_list.cpp
+    interval.cpp
 )
 
 # 创建一个静态库或共享库，视你的需求而定

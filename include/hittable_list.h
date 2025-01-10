@@ -27,7 +27,7 @@ class hittable_list{
     /// @param ray_tmax tmax
     /// @param rec 
     /// @return true for hit
-    bool hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const ;
+    bool hit(const ray& r, interval domain, hit_record& rec) const ;
 };
 
 #endif

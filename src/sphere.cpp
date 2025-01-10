@@ -12,7 +12,7 @@ sphere::~sphere() = default;
 /// @param ray_tmax 
 /// @param rec 
 /// @return 
-bool sphere::hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec) const {
+bool sphere::hit(const ray& r, interval domain, hit_record& rec) const {
 
   vec3 vec_sphere = this->center-r.origin();
   // Project the vec to ray direc
@@ -21,11 +21,15 @@ bool sphere::hit(const ray& r, double ray_tmin, double ray_tmax, hit_record& rec
   double dist = dist_vec.length();
   if (dist<=this->radius && factor>0){
     double t = std::sqrt(this->radius*this->radius-dist*dist);
-    // 
-    rec.p = r.direction()*-t+dist_vec+this->center;
+    point near_pt =  r.direction()*-t+dist_vec+this->center;
+    double ray_len = (near_pt-r.origin()).length();
+    if (domain.contains(ray_len)){
+      return false;
+    }
+    rec.p =near_pt;
     rec.normal = rec.p-this->center;
     rec.normal.normalize_vec();
-    rec.t = (rec.p-r.origin()).length();
+    rec.t = ray_len;
     rec.front_face = dot(rec.normal, r.direction())<0;
     return true;
   } 

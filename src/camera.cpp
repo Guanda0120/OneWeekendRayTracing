@@ -19,6 +19,9 @@ camera::camera(const canvas& canvas, double v_width, double far_plane_d):
   this->pixel_height_ = canvas.height;
   this->viewport_height_ = this->pixel_height_*this->delta_height_;
 
+  this->sample_per_pixel_=10;
+  this->sample_level_=3;
+
   this->start_pt_ = vec3(-this->viewport_width_/2, this->viewport_height_/2, -this->far_plane_dist_);
 };
 
@@ -39,7 +42,7 @@ image camera::render(const hittable& entity){
       ray r = ray(this->location_, direc_vec);
       hit_record record;
       color c;
-      if (entity.hit(r, 0, 100, record)){
+      if (entity.hit(r, interval(0, 100), record)){
         // Get the Normalize Vector 
         vec3 sphere_normal = record.normal;
         c = color(0.5*(sphere_normal.x()+1), 0.5*(sphere_normal.y()+1), 0.5*(sphere_normal.z()+1));
@@ -52,7 +55,7 @@ image camera::render(const hittable& entity){
           (1.0-a)+0.7*a,
           (1.0-a)+1.0*a
         );
-        //Add to Image
+        // Add to Image
       }
       
       img.insert_color(j, i, c);
@@ -68,36 +71,87 @@ image camera::render(const hittable_list& entities){
   
   for(int i=0; i<this->pixel_height_; i++){
     for(int j=0; j<this->pixel_width_; j++){
-      // Compute distance
-      vec3 tag_vec = this->start_pt_
-        +(i*delta_height_)*this->height_direction_
-        +(j*delta_width_)*this->width_direction_;
-      vec3 direc_vec = tag_vec-this->location_;
-      
-      direc_vec.normalize_vec();
-      // Construct the ray intersect
-      ray r = ray(this->location_, direc_vec);
-      hit_record record;
-      color c;
-      if (entities.hit(r, 0, 1000, record)){
-        // Get the Normalize Vector 
-        vec3 sphere_normal = record.normal;
-        c = color(0.5*(sphere_normal.x()+1), 0.5*(sphere_normal.y()+1), 0.5*(sphere_normal.z()+1));
-      } else {
-        // Compute Color
-        double a = 0.5*(direc_vec.y() + 1.0);
-      
-        c = color (
-          (1.0-a)+0.5*a,
-          (1.0-a)+0.7*a,
-          (1.0-a)+1.0*a
-        );
-        //Add to Image
-      }
-      
+      // color c = this->random_ray_aliase(entities, i, j);
+      color c = this->multi_sample_aliase(entities, i, j, this->sample_level_);
       img.insert_color(j, i, c);
     }
   }
 
   return img;
+}
+
+color camera::multi_sample_aliase(const hittable_list& entities, int i, int j, int sample_level) const {
+  int r=0, g=0, b=0;
+  int sample_pts = sample_level*sample_level;
+
+  double i_step = this->delta_height_/sample_level;
+  double j_step = this->delta_width_/sample_level;
+
+  for (int m=0; m<sample_level;m++){
+    for (int n=0; n<sample_level;n++){
+      vec3 tag_pt = this->start_pt_
+        +(i*this->delta_height_+i_step*m)*this->height_direction_
+        +(j*this->delta_width_+j_step*m)*this->width_direction_;
+        vec3 direc_vec = tag_pt-this->location_;
+      direc_vec.normalize_vec();
+      vec3 center = this->location_;
+      ray tmp_ray = ray(center, direc_vec);
+      color tmp_color = this->cal_pixel_color_(entities, tmp_ray);
+      r+=tmp_color.r;
+      g+=tmp_color.g;
+      b+=tmp_color.b;
+    }
+  }
+  color c = color();
+  c.r = int(r/sample_pts);
+  c.g = int(g/sample_pts);
+  c.b = int(b/sample_pts);
+  return c;
+}
+
+color camera::random_ray_aliase(const hittable_list& entities, int i, int j) const {
+  int r=0, g=0, b=0;
+  for (int k=0; k<this->sample_per_pixel_; k++){
+    ray rand_ray = this->get_ray(i,j);
+    color tmp_c = this->cal_pixel_color_(entities, rand_ray);
+    r+=tmp_c.r;
+    g+=tmp_c.g;
+    b+=tmp_c.b;
+  }
+  color c = color();
+  c.r = int(r/this->sample_per_pixel_);
+  c.g = int(g/this->sample_per_pixel_);
+  c.b = int(b/this->sample_per_pixel_);
+  return c;
+}
+
+ray camera::get_ray(int i, int j) const {
+  double i_d = i+random_double();
+  double j_d = j+random_double();
+  vec3 tag_vec = this->start_pt_
+    +(i_d*delta_height_)*this->height_direction_
+    +(j_d*delta_width_)*this->width_direction_;
+  vec3 direc_vec = tag_vec-this->location_;
+  direc_vec.normalize_vec();
+  vec3 center = this->location_;
+  return ray(center, direc_vec);
+}
+
+color camera::cal_pixel_color_(const hittable_list& entities, const ray& r) const {
+  hit_record record;
+  color c;
+  if (entities.hit(r, interval(0, 1000), record)){
+    // Get the Normalize Vector 
+    vec3 sphere_normal = record.normal;
+    c = color(0.5*(sphere_normal.x()+1), 0.5*(sphere_normal.y()+1), 0.5*(sphere_normal.z()+1));
+  } else {
+    // Not Hit just the blue gradient
+    double a = 0.5*(r.direction().y() + 1.0);    
+    c = color (
+      (1.0-a)+0.5*a,
+      (1.0-a)+0.7*a,
+      (1.0-a)+1.0*a
+    );
+  }
+  return c;
 }
