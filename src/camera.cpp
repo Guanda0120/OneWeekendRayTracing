@@ -22,6 +22,9 @@ camera::camera(const canvas& canvas, double v_width, double far_plane_d):
   this->sample_per_pixel_=10;
   this->sample_level_=3;
 
+  this->max_depth_ = 50;
+  this->gammar_coe_ = 0.1;
+
   this->start_pt_ = vec3(-this->viewport_width_/2, this->viewport_height_/2, -this->far_plane_dist_);
 };
 
@@ -96,7 +99,7 @@ color camera::multi_sample_aliase(const hittable_list& entities, int i, int j, i
       direc_vec.normalize_vec();
       vec3 center = this->location_;
       ray tmp_ray = ray(center, direc_vec);
-      color tmp_color = this->cal_pixel_color_(entities, tmp_ray);
+      color tmp_color = this->cal_pixel_color_(entities, tmp_ray, this->max_depth_-1);
       r+=tmp_color.r;
       g+=tmp_color.g;
       b+=tmp_color.b;
@@ -113,7 +116,7 @@ color camera::random_ray_aliase(const hittable_list& entities, int i, int j) con
   int r=0, g=0, b=0;
   for (int k=0; k<this->sample_per_pixel_; k++){
     ray rand_ray = this->get_ray(i,j);
-    color tmp_c = this->cal_pixel_color_(entities, rand_ray);
+    color tmp_c = this->cal_pixel_color_(entities, rand_ray, this->max_depth_);
     r+=tmp_c.r;
     g+=tmp_c.g;
     b+=tmp_c.b;
@@ -137,15 +140,40 @@ ray camera::get_ray(int i, int j) const {
   return ray(center, direc_vec);
 }
 
-color camera::cal_pixel_color_(const hittable_list& entities, const ray& r) const {
+color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int depth) const {
+  if (depth<0){
+    return color(0,0,0);
+  }
   hit_record record;
   color c;
   if (entities.hit(r, interval(0, 1000), record)){
     // Get the Normalize Vector 
+    /*
     vec3 sphere_normal = record.normal;
     c = color(0.5*(sphere_normal.x()+1), 0.5*(sphere_normal.y()+1), 0.5*(sphere_normal.z()+1));
+    */
+    vec3 sphere_normal = record.normal;
+    vec3 rand_direc = random_unit_vector_hemisphere(sphere_normal);
+    ray rand_ray = ray(record.p, rand_direc+sphere_normal);
+    // This recurancy Means
+    /**
+     * 
+     * 
+     *         o
+     *          \  ________________
+     *           \ |              |
+     *  0.125sky  \| 0.5sky       |
+     *         \  /|              |
+     * _________\/_|______________|______________
+     *         0.25sky 
+     */ 
+    // TODO Bug is here color exceed 255 
+    color c = this->cal_pixel_color_(entities, rand_ray, depth-1);
+    c.garmmar_correction(this->gammar_coe_);
+    return c;
   } else {
     // Not Hit just the blue gradient
+    // Here is Environment Light
     double a = 0.5*(r.direction().y() + 1.0);    
     c = color (
       (1.0-a)+0.5*a,

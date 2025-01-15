@@ -30,6 +30,10 @@ double vec3::length() const{
   return std::sqrt(this->e[0]*this->e[0] + this->e[1]*this->e[1] + this->e[2]*this->e[2]);
 }
 
+double vec3::length_squared() const{
+  return this->e[0]*this->e[0] + this->e[1]*this->e[1] + this->e[2]*this->e[2];
+}
+
 void vec3::normalize_vec(){
   double len = this->length();
   this->e[0]/=len;
@@ -39,6 +43,14 @@ void vec3::normalize_vec(){
 
 void vec3::stream_out(){
   std::cout<<'('<<e[0]<<','<<e[1]<<','<<e[2]<<')'<<std::endl;
+}
+
+vec3 vec3::random(){
+  return vec3(random_double(), random_double(),random_double());
+}
+
+vec3 vec3::random(double min, double max){
+  return vec3(random_double(min, max), random_double(min, max),random_double(min, max));
 }
 
 double vec3::x(){

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cmath>
+#include "rt_constance.h"
 
 /**
  * vec3 class basic contain simple +,-,*,/ operater,
@@ -24,10 +25,20 @@ class vec3 {
     vec3& operator+=(const vec3& v);
     /* get the length of the vector */
     double length() const;
+    
+    double length_squared() const;
     /// @brief Make the vector self unit vector
     void normalize_vec();
     /// @brief print this vector
     void stream_out();
+    /// @brief Generate a vector[0-1]
+    /// @return 
+    static vec3 random();
+    /// @brief Generate vector in some domain
+    /// @param min 
+    /// @param max 
+    /// @return 
+    static vec3 random(double min, double max);
 
     double x();
     double y();
@@ -78,6 +89,24 @@ inline vec3 cross(const vec3& u, const vec3& v){
 
 inline vec3 unit_vec(const vec3& v){
   return v/v.length();
+}
+
+inline vec3 random_unit_vector(){
+  while (true) {
+        auto p = vec3::random(-1,1);
+        auto lensq = p.length_squared();
+        if (1e-160 < lensq && lensq <= 1)
+            return p / sqrt(lensq);
+    }
+}
+
+inline vec3 random_unit_vector_hemisphere(const vec3& normal){
+  vec3 random_vec = random_unit_vector();
+  if (dot(normal, random_vec)>0.0){
+    return random_vec;
+  } else {
+    return -random_vec;
+  }
 }
 
 #endif

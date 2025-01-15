@@ -24,7 +24,7 @@ int main(){
   // Camera
   camera cam = camera(cav, 2.0, 1.0);
   image img = cam.render(world);
-  const char* file_name = "D://OneWeekendRayTracing//2.png";
+  const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/Lambert.png";
   img.save_png(file_name);
   std::cout<<"Write Successful!"<<std::endl;
 }

@@ -2,6 +2,8 @@
 #define HITTABLE_h
 
 #include "rt_constance.h"
+#include "ray.h"
+#include "interval.h"
 
 using point = vec3;
 

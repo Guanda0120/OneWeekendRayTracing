@@ -7,6 +7,9 @@
 #include "hittable.h"
 #include "hittable_list.h"
 #include "rt_constance.h"
+#include "ray.h"
+#include "vec3.h"
+#include "interval.h"
 
 
 class camera{
@@ -42,13 +45,16 @@ class camera{
     int pixel_height_;
     /// @brief msaa param
     int sample_level_;
+    /// @brief the scatter search depth.
+    int max_depth_;
     /// @brief Using MSAA Multi Sampling Anti Alias
     /// @param entities 
     /// @param i 
     /// @param j 
     /// @return 
     color multi_sample_aliase(const hittable_list& entities, int i, int j, int sample_level) const;
-    /// @brief 
+    
+    /// @brief Just use random ray to alias the edge, with this-> sample_per_pixel_
     /// @param entities 
     /// @param i 
     /// @param j 
@@ -61,7 +67,10 @@ class camera{
     /// @param j 
     /// @return a ray
     ray get_ray(int i, int j) const;
-    color cal_pixel_color_(const hittable_list& entities, const ray& r) const;
+    color cal_pixel_color_(const hittable_list& entities, const ray& r, int depth) const;
+    /// @brief Gammar Coefficient
+    double gammar_coe_;
+
 };
 
 #endif

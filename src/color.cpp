@@ -11,3 +11,9 @@ color::color(double r_ratio, double g_ratio, double b_ratio){
 void color::write_color(std::ostream& out){
     out<<this->r<<' '<<this->g<<' '<<this->b<<'\n';
 }
+
+void color::garmmar_correction(double garmmar_coe){
+    this->r = int(this->r*garmmar_coe);
+    this->g = int(this->g*garmmar_coe);
+    this->b = int(this->b*garmmar_coe);
+}

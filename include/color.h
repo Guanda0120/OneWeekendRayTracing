@@ -13,7 +13,8 @@ class color{
     int r;
     int g;
     int b;
-
+    
+    void garmmar_correction(double garmmar_coe);
 };
 
 #endif
