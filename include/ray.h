@@ -5,6 +5,8 @@
 
 class ray{
   public:
+
+    ray();
     /// @brief Constructor
     /// @param origin The origin point
     /// @param direc The direction

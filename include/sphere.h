@@ -2,17 +2,20 @@
 #define SPHERE_H
 
 #include <cmath>
+#include <memory>
 #include "hittable.h"
+#include "materials/material.h"
 
 class sphere: public hittable
 {
   private:
     /* Sphere radius and center point */
-    double radius;
-    point center;
+    double radius_;
+    point center_;
+    std::shared_ptr<material> mat_;
 
   public:
-    sphere(const point& c, double r);
+    sphere(const point& c, double r, std::shared_ptr<material> mat);
     bool hit(const ray& r, interval domain, hit_record& rec) const override ;
     ~sphere();
 };

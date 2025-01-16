@@ -93,10 +93,10 @@ inline vec3 unit_vec(const vec3& v){
 
 inline vec3 random_unit_vector(){
   while (true) {
-        auto p = vec3::random(-1,1);
-        auto lensq = p.length_squared();
-        if (1e-160 < lensq && lensq <= 1)
-            return p / sqrt(lensq);
+    auto p = vec3::random(-1,1);
+    auto lensq = p.length_squared();
+    if (1e-160 < lensq && lensq <= 1)
+      return p / sqrt(lensq);
     }
 }
 
@@ -109,4 +109,7 @@ inline vec3 random_unit_vector_hemisphere(const vec3& normal){
   }
 }
 
+inline vec3 reflect(vec3 inject_vec, vec3 normal){
+  return inject_vec-2*dot(inject_vec, normal)*normal;
+}
 #endif

@@ -20,7 +20,8 @@ set(SRC_FILES
     interval.cpp
 )
 
-# 创建一个静态库或共享库，视你的需求而定
+add_subdirectory(materials)
+
 add_library(src_lib STATIC ${SRC_FILES})
 
 # 包含头文件路径，供其他目标使用

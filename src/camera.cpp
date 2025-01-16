@@ -6,24 +6,24 @@ camera::camera(const canvas& canvas, double v_width, double far_plane_d):
   // Camera Location
   this->location_ = vec3(0.0,0.0,0.0);
   this->aspect_ratio_ = canvas.aspect_ratio;
-  // this->viewport_height_ = this->aspect_ratio_/this->viewport_width_;
+  this->viewport_height_ = this->viewport_width_/this->aspect_ratio_;
   
   this->delta_width_ = this->viewport_width_/canvas.width;
-  // this->delta_height_ = this->viewport_height_/canvas.height;
-  this->delta_height_ = this->delta_width_;
+  this->delta_height_ = this->viewport_height_/canvas.height;
+  // this->delta_height_ = this->delta_width_;
 
   this->width_direction_ = vec3(1.0,0.0,0.0);
   this->height_direction_ = vec3(0.0,-1.0,0.0);
 
   this->pixel_width_ = canvas.width;
   this->pixel_height_ = canvas.height;
-  this->viewport_height_ = this->pixel_height_*this->delta_height_;
+  // this->viewport_height_ = this->pixel_height_*this->delta_height_;
 
   this->sample_per_pixel_=10;
   this->sample_level_=3;
 
-  this->max_depth_ = 50;
-  this->gammar_coe_ = 0.1;
+  this->max_depth_ = 10;
+  this->gammar_coe_ = 0.5;
 
   this->start_pt_ = vec3(-this->viewport_width_/2, this->viewport_height_/2, -this->far_plane_dist_);
 };
@@ -94,7 +94,7 @@ color camera::multi_sample_aliase(const hittable_list& entities, int i, int j, i
     for (int n=0; n<sample_level;n++){
       vec3 tag_pt = this->start_pt_
         +(i*this->delta_height_+i_step*m)*this->height_direction_
-        +(j*this->delta_width_+j_step*m)*this->width_direction_;
+        +(j*this->delta_width_+j_step*n)*this->width_direction_;
         vec3 direc_vec = tag_pt-this->location_;
       direc_vec.normalize_vec();
       vec3 center = this->location_;
@@ -152,9 +152,15 @@ color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int 
     vec3 sphere_normal = record.normal;
     c = color(0.5*(sphere_normal.x()+1), 0.5*(sphere_normal.y()+1), 0.5*(sphere_normal.z()+1));
     */
+    color attenuation;
+    ray scattered;
+    /*
     vec3 sphere_normal = record.normal;
     vec3 rand_direc = random_unit_vector_hemisphere(sphere_normal);
-    ray rand_ray = ray(record.p, rand_direc+sphere_normal);
+    vec3 lambert_direc = rand_direc+sphere_normal;
+    lambert_direc.normalize_vec();
+    ray rand_ray = ray(record.p, lambert_direc);
+    */
     // This recurancy Means
     /**
      * 
@@ -168,9 +174,12 @@ color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int 
      *         0.25sky 
      */ 
     // TODO Bug is here color exceed 255 
-    color c = this->cal_pixel_color_(entities, rand_ray, depth-1);
-    c.garmmar_correction(this->gammar_coe_);
-    return c;
+    if (record.mat->scatter(r, record, attenuation, scattered)){
+      return attenuation*this->cal_pixel_color_(entities, rand_ray, depth-1);
+    }
+    // color c = this->cal_pixel_color_(entities, rand_ray, depth-1);
+    // c.garmmar_correction(this->gammar_coe_);    
+    return color(0,0,0);
   } else {
     // Not Hit just the blue gradient
     // Here is Environment Light

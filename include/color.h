@@ -17,4 +17,12 @@ class color{
     void garmmar_correction(double garmmar_coe);
 };
 
+inline color operator*(const color& col_1,const color& col_2){
+  return color(
+    (col_1.r * col_2.r)/(255.999*255.999),
+    (col_1.g * col_2.g)/(255.999*255.999),
+    (col_1.b * col_2.b)/(255.999*255.999)
+  );
+} 
+
 #endif
