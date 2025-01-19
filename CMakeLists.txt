@@ -23,4 +23,4 @@ target_include_directories(one_weekend_ray_tracing PRIVATE
     ${ZLIB_INCLUDE_DIRS} 
     )
 
-target_link_libraries(one_weekend_ray_tracing PRIVATE src_lib  ${PNG_LIBRARIES} ${ZLIB_LIBRARIES})
+target_link_libraries(one_weekend_ray_tracing PRIVATE materials_lib src_lib  ${PNG_LIBRARIES} ${ZLIB_LIBRARIES})

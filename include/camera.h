@@ -2,6 +2,7 @@
 #define CAMERA_H
 
 #include<iostream>
+#include<cmath>
 #include "canvas.h"
 #include "image.h"
 #include "hittable.h"
@@ -15,11 +16,13 @@
 
 class camera{
   public:
-    camera(const canvas& canvas, double v_width, double far_plane_d);
+    camera(const canvas& canvas, double fov, double far_plane_d);
     image render(const hittable& entity);
     image render(const hittable_list& entities);
 
   private:
+    /// @brief Field of View, Tipically of horizontal
+    double fov_;
     /// @brief The Loaction of camera
     vec3 location_;
     /// @brief The aspect ratio, pass from canvas

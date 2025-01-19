@@ -1,11 +1,13 @@
 #include "camera.h"
 
-camera::camera(const canvas& canvas, double v_width, double far_plane_d):
-  viewport_width_(v_width), far_plane_dist_(far_plane_d)
+camera::camera(const canvas& canvas, double fov, double far_plane_d):
+  fov_(fov), far_plane_dist_(far_plane_d)
 {
   // Camera Location
+  // TODO Need to asjust camera fov and frust
   this->location_ = vec3(0.0,0.0,0.0);
   this->aspect_ratio_ = canvas.aspect_ratio;
+  this->viewport_width_ = std::tan(this->fov_/2)*this->far_plane_dist_*2;
   this->viewport_height_ = this->viewport_width_/this->aspect_ratio_;
   
   this->delta_width_ = this->viewport_width_/canvas.width;
@@ -173,9 +175,8 @@ color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int 
      * _________\/_|______________|______________
      *         0.25sky 
      */ 
-    // TODO Bug is here color exceed 255 
-    if (record.mat->scatter(r, record, attenuation, scattered)){
-      return attenuation*this->cal_pixel_color_(entities, rand_ray, depth-1);
+    if (record.mat->scatter(r, record.p, record.normal, attenuation, scattered)){
+      return attenuation*this->cal_pixel_color_(entities, scattered, depth-1);
     }
     // color c = this->cal_pixel_color_(entities, rand_ray, depth-1);
     // c.garmmar_correction(this->gammar_coe_);    

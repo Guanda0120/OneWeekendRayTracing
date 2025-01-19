@@ -2,7 +2,6 @@
 #define MATERIAL_H
 
 #include "ray.h"
-#include "hittable.h"
 #include "color.h"
 
 class material{
@@ -14,7 +13,7 @@ class material{
     /// @param attenuation 
     /// @param scattered 
     /// @return 
-    virtual bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const;
+    virtual bool scatter(const ray& r_in, const point& p, const vec3& normal, color& attenuation, ray& scattered) const;
 };
 
 #endif
