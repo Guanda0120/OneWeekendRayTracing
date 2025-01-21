@@ -3,6 +3,7 @@
 
 #include "ray.h"
 #include "color.h"
+#include "hit_record.h"
 
 class material{
   public:

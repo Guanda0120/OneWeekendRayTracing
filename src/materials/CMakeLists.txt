@@ -1,20 +1,17 @@
-# src/materials/CMakeLists.txt
-
 # 设置材料模块的源文件
 set(MATERIALS_SRC_FILES
-    material.cpp
-    lambertian.cpp
-    metal.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/material.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lambertian.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/metal.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/dielectric.cpp
 )
 
-# 创建静态库 materials_lib
-add_library(materials_lib STATIC ${MATERIALS_SRC_FILES})
+set(MATERIALS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/materials)
 
-# 包含头文件路径
-# PUBLIC: 允许 materials_lib 的依赖者也能访问这些路径
-target_include_directories(materials_lib PUBLIC
-    ${CMAKE_SOURCE_DIR}/include/materials
-)
+# 将变量设置为 PARENT_SCOPE，使其可供上级目录使用
+set(MATERIALS_SRC_FILES ${MATERIALS_SRC_FILES} PARENT_SCOPE)
+set(MATERIALS_INCLUDE_DIR ${MATERIALS_INCLUDE_DIR} PARENT_SCOPE)
 
-# 让 materials_lib 依赖 src_lib
-target_link_libraries(materials_lib PUBLIC src_lib)
+# 调试信息
+message(STATUS "MATERIALS_SRC_FILES: ${MATERIALS_SRC_FILES}")
+message(STATUS "MATERIALS_INCLUDE_DIR: ${MATERIALS_INCLUDE_DIR}")

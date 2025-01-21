@@ -26,20 +26,20 @@ int main(){
 
   // Add a sphere to render
   hittable_list world = hittable_list();
-  auto render_ball =std::make_shared<sphere>(point(0.0,0.0,-1.0), 0.3, core_lambert);  
+  auto render_ball =std::make_shared<sphere>(point(0.0,0.0,-4.0), 0.3, core_lambert);  
   world.add(render_ball);
-  auto ground_ball = std::make_shared<sphere>(point(0.0,-100.3,-1.0), 100.0, ground_lambert);
+  auto ground_ball = std::make_shared<sphere>(point(0.0,-100.3,-4.0), 100.0, ground_lambert);
   world.add(ground_ball);
-  auto left_ball = std::make_shared<sphere>(point(-0.7,0.0,-1.0), 0.3, left_mat);
+  auto left_ball = std::make_shared<sphere>(point(-0.7,0.0,-4.0), 0.3, left_mat);
   world.add(left_ball);
-  auto right_ball = std::make_shared<sphere>(point(0.7,0.0,-1.0), 0.3, right_mat);
+  auto right_ball = std::make_shared<sphere>(point(0.7,0.0,-4.0), 0.3, right_mat);
   world.add(right_ball);
 
   // Camera
-  camera cam = camera(cav, pi*35/60, 5.0);
+  camera cam = camera(cav, pi*35/180, 5.0);
   image img = cam.render(world);
-  const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Lambert1.png";
-  // const char* file_name = "D://OneWeekendRayTracing/img/Lambert.png";
+  // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Lambert1.png";
+  const char* file_name = "D://OneWeekendRayTracing/img/Metal.png";
   img.save_png(file_name);
   std::cout<<"Write Successful!"<<std::endl;
 };

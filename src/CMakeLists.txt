@@ -22,6 +22,10 @@ set(SRC_FILES
 
 add_subdirectory(materials)
 
+# 将 materials 的源文件合并到 SRC_FILES 中
+list(APPEND SRC_FILES ${MATERIALS_SRC_FILES})
+
+# 定义src静态库
 add_library(src_lib STATIC ${SRC_FILES})
 
 # 包含头文件路径，供其他目标使用
