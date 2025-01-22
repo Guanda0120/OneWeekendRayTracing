@@ -1,8 +1,9 @@
 #ifndef COLOR_H
 #define COLOR_H
 
-#include<iostream>
-#include<cmath>
+#include <iostream>
+#include <cmath>
+#include "rt_constance.h"
 
 class color{
 
@@ -15,6 +16,10 @@ class color{
     int b;
     
     void garmmar_correction(double garmmar_coe);
+    void garmmar_correction();
+
+    static color random();
+    static color random(double min, double max);
 };
 
 inline color operator*(const color& col_1,const color& col_2){

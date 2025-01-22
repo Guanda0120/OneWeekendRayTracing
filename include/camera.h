@@ -16,7 +16,7 @@
 
 class camera{
   public:
-    camera(const canvas& canvas, double fov, double far_plane_d);
+    camera(const canvas& canvas, double fov, double far_plane_d, point origin=point(0.0, 0.0, 0.0));
     image render(const hittable& entity);
     image render(const hittable_list& entities);
 

@@ -1,11 +1,11 @@
 #include "camera.h"
 
-camera::camera(const canvas& canvas, double fov, double far_plane_d):
-  fov_(fov), far_plane_dist_(far_plane_d)
+camera::camera(const canvas& canvas, double fov, double far_plane_d, point origin):
+  fov_(fov), far_plane_dist_(far_plane_d), location_(origin)
 {
   // Camera Location
   // TODO Need to asjust camera fov and frust
-  this->location_ = vec3(0.0,0.0,0.0);
+  // this->location_ = vec3(0.0,0.0,0.0);
   this->aspect_ratio_ = canvas.aspect_ratio;
   this->viewport_width_ = std::tan(this->fov_/2)*this->far_plane_dist_*2;
   this->viewport_height_ = this->viewport_width_/this->aspect_ratio_;
@@ -78,6 +78,7 @@ image camera::render(const hittable_list& entities){
     for(int j=0; j<this->pixel_width_; j++){
       // color c = this->random_ray_aliase(entities, i, j);
       color c = this->multi_sample_aliase(entities, i, j, this->sample_level_);
+      // c.garmmar_correction();
       img.insert_color(j, i, c);
     }
   }
@@ -144,7 +145,12 @@ ray camera::get_ray(int i, int j) const {
 
 color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int depth) const {
   if (depth<=0){
-    return color(0,0,0);
+    double a = 0.5 * (r.direction().y() + 1.0);
+    return color(
+        (1.0 - a) + 0.5 * a,
+        (1.0 - a) + 0.7 * a,
+        (1.0 - a) + 1.0 * a
+    );
   }
   hit_record record;
   color c;

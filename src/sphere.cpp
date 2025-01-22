@@ -20,40 +20,35 @@ bool sphere::hit(const ray& r, interval domain, hit_record& rec) const {
   vec3 dist_vec = factor*r.direction()-vec_sphere;
   double dist = dist_vec.length();
   if (dist<=this->radius_ && factor>0){
-    double t = std::sqrt(this->radius_ * this->radius_ - dist * dist);
-    double t_hit = factor - t;
-    if (!domain.contains(t_hit)) {
-        return false;
-    }
-    rec.p = r.origin() + t_hit * r.direction();
-    rec.normal = (rec.p - this->center_);
-    rec.normal.normalize_vec();
-    rec.front_face = dot(r.direction(), rec.normal) < 0;
-    rec.normal = rec.front_face ? rec.normal : -rec.normal;
-    rec.t = t_hit;
-    rec.mat = this->mat_;
-    return true;
-    // double t = std::sqrt(this->radius_*this->radius_-dist*dist);
-    // point near_pt =  this->center_+dist_vec-r.direction()*t;
-    // double ray_len = (near_pt-r.origin()).length();
-    // if (!domain.contains(ray_len)){
-    //   return false;
-    // }
-    // // Just self
+
+    double t = std::sqrt(this->radius_*this->radius_-dist*dist);
+    point near_pt =  this->center_+dist_vec-r.direction()*t;
+    double ray_len = (near_pt-r.origin()).length();
+
     // if (ray_len<NEAR_ZERO_BUF){
-    //   near_pt =  this->center_+dist_vec+r.direction()*t;
-    //   ray_len = (near_pt-r.origin()).length();
-    //   if (!domain.contains(ray_len)){
-    //     return false;
-    //   }
+    //   // C
     // }
-    // rec.p =near_pt;
-    // rec.normal = rec.p-this->center_;
-    // rec.normal.normalize_vec();
-    // rec.t = ray_len;
-    // rec.mat = this->mat_;
-    // rec.front_face = dot(rec.normal, r.direction())<0;
-    // return true;
+
+
+    if (!domain.contains(ray_len)){
+      return false;
+    }
+    // Just self
+    if ((near_pt-r.origin()).length()<NEAR_ZERO_BUF){
+      near_pt =  this->center_+dist_vec+r.direction()*t;
+      ray_len = (near_pt-r.origin()).length();
+      if (!domain.contains(ray_len)){
+        return false;
+      }
+    }
+    rec.p =near_pt;
+    rec.normal = rec.p-this->center_;
+    rec.normal.normalize_vec();
+    rec.t = ray_len;
+    rec.mat = this->mat_;
+    rec.front_face = dot(rec.normal, r.direction())<0;
+    rec.normal = rec.front_face? rec.normal:-rec.normal;
+    return true;
   } 
   return false;
 }
