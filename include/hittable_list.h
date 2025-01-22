@@ -28,6 +28,9 @@ class hittable_list{
     /// @param rec 
     /// @return true for hit
     bool hit(const ray& r, interval domain, hit_record& rec) const ;
+    
+    /// @brief Delete all the hitable object
+    ~hittable_list() = default;
 };
 
 #endif

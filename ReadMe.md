@@ -137,3 +137,23 @@ target_link_libraries(MyLib PUBLIC SomeLibrary)
 ```
 头文件路径：include/mylib 对 MyLib 和依赖 MyLib 的其他目标都可见。
 链接库：SomeLibrary 会被 MyLib 和依赖 MyLib 的目标链接。
+
+## 循环引用的时候尽量使用裸指针
+如果存在这样一个情况中, 两个对象互相依赖彼此，这个时候可以使用裸指针或者`std::weak_ptr`工作，使用裸指针的情况可以进行前向声明
+```C++
+// A.cpp
+class B;
+
+class A{
+  public B* b_;
+}
+```
+
+```C++
+// B.cpp
+class A;
+
+class A{
+  public A* a_;
+}
+```

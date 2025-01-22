@@ -143,7 +143,7 @@ ray camera::get_ray(int i, int j) const {
 }
 
 color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int depth) const {
-  if (depth<0){
+  if (depth<=0){
     return color(0,0,0);
   }
   hit_record record;
@@ -175,7 +175,7 @@ color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int 
      * _________\/_|______________|______________
      *         0.25sky 
      */ 
-    if (record.mat->scatter(r, record.p, record.normal, attenuation, scattered)){
+    if (record.mat->scatter(r, record, attenuation, scattered)){
       return attenuation*this->cal_pixel_color_(entities, scattered, depth-1);
     }
     // color c = this->cal_pixel_color_(entities, rand_ray, depth-1);

@@ -1,5 +1,6 @@
 # 设置材料模块的源文件
 set(MATERIALS_SRC_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/material_factory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/material.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/lambertian.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/metal.cpp

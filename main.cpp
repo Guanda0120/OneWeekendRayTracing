@@ -8,8 +8,7 @@
 #include "camera.h"
 #include "sphere.h"
 #include "hittable_list.h"
-#include "materials/lambertian.h"
-#include "materials/metal.h"
+#include "materials/material_factory.h"
 
 int main(){
   
@@ -19,10 +18,18 @@ int main(){
   canvas cav = canvas(image_width, aspect_ratio);
   
   // initial the material
-  std::shared_ptr<lambertian> core_lambert = make_shared<lambertian>(color(0.1, 0.2, 0.4)); 
-  std::shared_ptr<lambertian> ground_lambert = make_shared<lambertian>(color(0.8, 0.8, 0.2));
-  std::shared_ptr<metal> left_mat = make_shared<metal>(color(0.8, 0.8, 0.8));
-  std::shared_ptr<metal> right_mat = make_shared<metal>(color(0.8, 0.6, 0.4), 0.3);
+  material_factory mat_factory = material_factory();
+  
+  lambertian* core_lambert = new lambertian(color(0.1, 0.2, 0.4), "DarkBlue"); 
+  lambertian* ground_lambert = new lambertian(color(0.8, 0.8, 0.2), "Green");
+  metal* left_mat = new metal(color(0.8, 0.8, 0.8),"Steel");
+  // metal* right_mat = new metal(color(0.8, 0.6, 0.4),"Corn", 0.3);
+  dielectric* right_mat = new dielectric(1.50, "Glass");
+  mat_factory.add_material(core_lambert);
+  mat_factory.add_material(ground_lambert);
+  mat_factory.add_material(left_mat);
+  mat_factory.add_material(right_mat);
+
 
   // Add a sphere to render
   hittable_list world = hittable_list();
@@ -39,7 +46,7 @@ int main(){
   camera cam = camera(cav, pi*35/180, 5.0);
   image img = cam.render(world);
   // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Lambert1.png";
-  const char* file_name = "D://OneWeekendRayTracing/img/Metal.png";
+  const char* file_name = "D://OneWeekendRayTracing/img/Glass1.png";
   img.save_png(file_name);
   std::cout<<"Write Successful!"<<std::endl;
 };

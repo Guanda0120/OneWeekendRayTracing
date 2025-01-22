@@ -12,4 +12,4 @@ class hittable{
     virtual bool hit(const ray& r, interval domain, hit_record& rec) const = 0;
 };
 
-#endif
+#endif 

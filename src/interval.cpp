@@ -10,9 +10,9 @@ double interval::size() const{
 };
 
 bool interval::contains(double t) const{
-  return this->min<= t && t>=this->max;
+  return this->min<= t && t<=this->max;
 };
 
 bool interval::surrounds(double t) const{
-  return this->min<t && t>this->max;
+  return this->min<t && t<this->max;
 }

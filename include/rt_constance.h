@@ -17,6 +17,8 @@ const double pi = 3.1415926535897932385;
 
 const double absolute_error = 1e-160;
 
+const double NEAR_ZERO_BUF = 1e-3;
+
 // Utility Functions
 inline double degrees_to_radians(double degrees) {
   return degrees * pi / 180.0;

@@ -1,9 +1,10 @@
 #ifndef HIT_RECORD_H
 #define HIT_RECORD_H
 
-#include <memory>
 #include "vec3.h"
 #include "materials/material.h"
+
+class material;
 
 struct hit_record{
   public:
@@ -16,7 +17,7 @@ struct hit_record{
     /// @brief Is the face the front face
     bool front_face;
     /// @brief The material of hit point
-    std::shared_ptr<material> mat;
+    material* mat;
 };
 
 #endif

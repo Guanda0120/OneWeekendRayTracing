@@ -2,7 +2,6 @@
 #define SPHERE_H
 
 #include <cmath>
-#include <memory>
 #include "hittable.h"
 #include "materials/material.h"
 
@@ -12,11 +11,13 @@ class sphere: public hittable
     /* Sphere radius and center point */
     double radius_;
     point center_;
-    std::shared_ptr<material> mat_;
+    material* mat_;
 
   public:
-    sphere(const point& c, double r, std::shared_ptr<material> mat);
+    sphere(const point& c, double r, material* mat);
     bool hit(const ray& r, interval domain, hit_record& rec) const override ;
+    
+    /// @brief Dont delete the material, material will be deleted by material manager
     ~sphere();
 };
 

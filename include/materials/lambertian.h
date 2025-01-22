@@ -5,8 +5,8 @@
 
 class lambertian:public material {
   public:
-    lambertian(const color& albedo);
-    bool scatter(const ray& r_in, const point& p, const vec3& normal, color& attenuation, ray& scattered) const override;
+    lambertian(const color& albedo, string mat_name);
+    bool scatter(const ray& r_in, const hit_record& rec, color& attenuation, ray& scattered) const override;
 
   private:
     color albedo_;

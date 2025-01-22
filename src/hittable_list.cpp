@@ -26,3 +26,11 @@ bool hittable_list::hit(const ray& r, interval domain, hit_record& rec) const {
   }
   return is_hit;
 };
+
+// hittable_list::~hittable_list(){
+//   for (auto& hittable_obj: this->objects)
+//   {
+//     delete hittable_obj;
+//   }
+  
+// }
