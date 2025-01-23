@@ -1,4 +1,6 @@
 ## Github
+本项目学习自Ray Tracing In One Weekend, 并针对自身的编码习惯做了调整。
+This Project fork from the following project, and modify some code。  
 [Github](https://github.com/RayTracing/raytracing.github.io/)
 
 ## Week1
