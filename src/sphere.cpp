@@ -25,11 +25,6 @@ bool sphere::hit(const ray& r, interval domain, hit_record& rec) const {
     point near_pt =  this->center_+dist_vec-r.direction()*t;
     double ray_len = (near_pt-r.origin()).length();
 
-    // if (ray_len<NEAR_ZERO_BUF){
-    //   // C
-    // }
-
-
     if (!domain.contains(ray_len)){
       return false;
     }

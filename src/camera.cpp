@@ -1,11 +1,16 @@
 #include "camera.h"
 
-camera::camera(const canvas& canvas, double fov, double far_plane_d, point origin):
-  fov_(fov), far_plane_dist_(far_plane_d), location_(origin)
+camera::camera(
+  const canvas& canvas, 
+  double fov,
+  double far_plane_d,
+  point origin, 
+  vec3 look_at, 
+  vec3 up_at
+):
+  fov_(fov), far_plane_dist_(far_plane_d), location_(origin), look_at_(look_at), up_at_(up_at) 
 {
   // Camera Location
-  // TODO Need to asjust camera fov and frust
-  // this->location_ = vec3(0.0,0.0,0.0);
   this->aspect_ratio_ = canvas.aspect_ratio;
   this->viewport_width_ = std::tan(this->fov_/2)*this->far_plane_dist_*2;
   this->viewport_height_ = this->viewport_width_/this->aspect_ratio_;
@@ -13,9 +18,11 @@ camera::camera(const canvas& canvas, double fov, double far_plane_d, point origi
   this->delta_width_ = this->viewport_width_/canvas.width;
   this->delta_height_ = this->viewport_height_/canvas.height;
   // this->delta_height_ = this->delta_width_;
-
-  this->width_direction_ = vec3(1.0,0.0,0.0);
-  this->height_direction_ = vec3(0.0,-1.0,0.0);
+  // TODO 
+  this->height_direction_ = -vec3(this->up_at_);
+  this->width_direction_ = cross(this->look_at_, this->up_at_);
+  // this->width_direction_ = vec3(1.0,0.0,0.0);
+  // this->height_direction_ = vec3(0.0,-1.0,0.0);
 
   this->pixel_width_ = canvas.width;
   this->pixel_height_ = canvas.height;
@@ -27,7 +34,12 @@ camera::camera(const canvas& canvas, double fov, double far_plane_d, point origi
   this->max_depth_ = 10;
   this->gammar_coe_ = 0.5;
 
-  this->start_pt_ = vec3(-this->viewport_width_/2, this->viewport_height_/2, -this->far_plane_dist_);
+  this->start_pt_ = this->location_+this->far_plane_dist_*this->look_at_
+    -(this->viewport_height_/2)*this->height_direction_
+    -(this->viewport_width_/2)*this->width_direction_;
+
+
+  // this->start_pt_ = point(-this->viewport_width_/2, this->viewport_height_/2, -this->far_plane_dist_);
 };
 
 image camera::render(const hittable& entity){
@@ -78,7 +90,7 @@ image camera::render(const hittable_list& entities){
     for(int j=0; j<this->pixel_width_; j++){
       // color c = this->random_ray_aliase(entities, i, j);
       color c = this->multi_sample_aliase(entities, i, j, this->sample_level_);
-      // c.garmmar_correction();
+      c.garmmar_correction();
       img.insert_color(j, i, c);
     }
   }

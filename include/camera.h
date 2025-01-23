@@ -16,7 +16,14 @@
 
 class camera{
   public:
-    camera(const canvas& canvas, double fov, double far_plane_d, point origin=point(0.0, 0.0, 0.0));
+    camera(
+      const canvas& canvas, 
+      double fov, 
+      double far_plane_d, 
+      point origin=point(0.0, 0.0, 0.0), 
+      vec3 look_at = vec3(0,0,-1),
+      vec3 up_at = vec3(0,1,0)
+    );
     image render(const hittable& entity);
     image render(const hittable_list& entities);
 
@@ -38,7 +45,11 @@ class camera{
     /// @brief The Step Height for pixel of a viewport height
     double delta_height_;
     /// @brief The ground true up left point coord
-    vec3 start_pt_;
+    point start_pt_;
+    /// @brief Where is the Camera Look at
+    vec3 look_at_;
+    /// @brief Where is the UP direction at {unit vector}
+    vec3 up_at_;
     /// @brief The width direction
     vec3 width_direction_;
     /// @brief The height direction

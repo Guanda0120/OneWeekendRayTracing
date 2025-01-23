@@ -70,25 +70,28 @@ int main(){
   mat_factory.add_material(right_mat);
 
   // Add a sphere to render
-  hittable_list world = hittable_list();
-  auto render_ball =std::make_shared<sphere>(point(0.0,0.0,-4.0), 0.3, core_lambert);  
-  world.add(render_ball);
-  auto ground_ball = std::make_shared<sphere>(point(0.0,-100.3,-4.0), 100.0, ground_lambert);
-  world.add(ground_ball);
-  auto left_ball = std::make_shared<sphere>(point(-0.62,0.0,-4.0), 0.3, left_mat);
-  world.add(left_ball);
-  auto right_ball = std::make_shared<sphere>(point(0.62,0.0,-4.0), 0.3, right_mat);
-  world.add(right_ball);
+  // hittable_list world = hittable_list();
+  // auto render_ball =std::make_shared<sphere>(point(0.0,0.0,-4.0), 0.3, core_lambert);  
+  // world.add(render_ball);
+  // auto ground_ball = std::make_shared<sphere>(point(0.0,-100.3,-4.0), 100.0, ground_lambert);
+  // world.add(ground_ball);
+  // auto left_ball = std::make_shared<sphere>(point(-0.62,0.0,-4.0), 0.3, left_mat);
+  // world.add(left_ball);
+  // auto right_ball = std::make_shared<sphere>(point(0.62,0.0,-4.0), 0.3, right_mat);
+  // world.add(right_ball);
   
-  // hittable_list world = generate_scene();
+  hittable_list world = generate_scene();
 
   // Camera
   point p = point(13,2,3);
-  camera cam = camera(cav, pi*35/180, 5.0);
+  vec3 look_at= point(0,0,0)-p;
+  look_at.normalize_vec();
+  vec3 up_to = vec3(0,1,0);
+  camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
   
   image img = cam.render(world);
-  const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Scene.png";
-  // const char* file_name = "D://OneWeekendRayTracing/img/Glass1.png";
+//   const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Scene.png";
+  const char* file_name = "D://OneWeekendRayTracing/img/Scene_Huge.png";
   img.save_png(file_name);
   std::cout<<"Write Successful!"<<std::endl;
 };
