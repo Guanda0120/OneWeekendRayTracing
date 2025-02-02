@@ -38,7 +38,7 @@ camera::camera(
     -(this->viewport_height_/2)*this->height_direction_
     -(this->viewport_width_/2)*this->width_direction_;
 
-
+  this->shutter_open_ = 1.00;
   // this->start_pt_ = point(-this->viewport_width_/2, this->viewport_height_/2, -this->far_plane_dist_);
 };
 
@@ -113,7 +113,9 @@ color camera::multi_sample_aliase(const hittable_list& entities, int i, int j, i
         vec3 direc_vec = tag_pt-this->location_;
       direc_vec.normalize_vec();
       vec3 center = this->location_;
-      ray tmp_ray = ray(center, direc_vec);
+      // Consider Move object
+      double tm = random_double(0, this->shutter_open_);
+      ray tmp_ray = ray(center, direc_vec, tm);
       color tmp_color = this->cal_pixel_color_(entities, tmp_ray, this->max_depth_-1);
       r+=tmp_color.r;
       g+=tmp_color.g;

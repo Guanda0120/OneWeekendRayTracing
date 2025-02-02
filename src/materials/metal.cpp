@@ -19,7 +19,7 @@ bool metal::scatter(const ray& r_in, const hit_record& rec, color& attenuation, 
     reflected+=this->fuzz_coe_*random_unit_vector();
     reflected.normalize_vec();
   }
-  scattered = ray(rec.p, reflected);
+  scattered = ray(rec.p, reflected, r_in.time());
   attenuation = albedo_;
   return true;
 };

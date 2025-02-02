@@ -19,8 +19,8 @@ class camera{
     camera(
       const canvas& canvas, 
       double fov, 
-      double far_plane_d, 
-      point origin=point(0.0, 0.0, 0.0), 
+      double far_plane_d,
+      point origin=point(0.0, 0.0, 0.0),
       vec3 look_at = vec3(0,0,-1),
       vec3 up_at = vec3(0,1,0)
     );
@@ -85,7 +85,8 @@ class camera{
     color cal_pixel_color_(const hittable_list& entities, const ray& r, int depth) const;
     /// @brief Gammar Coefficient
     double gammar_coe_;
-
+    /// @brief The shutter open time
+    double shutter_open_;
 };
 
 #endif

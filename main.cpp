@@ -25,7 +25,8 @@ hittable_list generate_scene(){
                   // diffuse
                   auto albedo = color::random() * color::random();
                   sphere_material = new lambertian(albedo, "Mat");
-                  world.add(make_shared<sphere>(center, 0.2, sphere_material));
+                  auto center2 = center + vec3(0, random_double(0,.5), 0);
+                  world.add(make_shared<sphere>(center, center2, 0.2, sphere_material));
               } else if (choose_mat < 0.95) {
                   // metal
                   auto albedo = color::random(0.5, 1);
@@ -90,8 +91,8 @@ int main(){
   camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
   
   image img = cam.render(world);
-//   const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Scene.png";
-  const char* file_name = "D://OneWeekendRayTracing/img/Scene_Huge.png";
+  const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/MotionBlur.png";
+  // const char* file_name = "D://OneWeekendRayTracing/img/Scene_Huge.png";
   img.save_png(file_name);
   std::cout<<"Write Successful!"<<std::endl;
 };

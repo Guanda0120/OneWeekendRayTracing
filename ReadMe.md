@@ -4,7 +4,13 @@ This Project fork from the following project, and modify some code。
 [Github](https://github.com/RayTracing/raytracing.github.io/)
 
 ## Week1
-[文档链接](https://raytracing.github.io/books/RayTracingInOneWeekend.html)  
+[文档链接](https://raytracing.github.io/books/RayTracingInOneWeekend.html)
+
+## Week2
+[文档链接](https://raytracing.github.io/books/RayTracingTheNextWeek.html)
+
+## Further Reading 
+[文档链接](https://github.com/RayTracing/raytracing.github.io/wiki/Further-Readings)
 
 ## Output a Image  
 ### Differencce Between `cout` and `clog`  

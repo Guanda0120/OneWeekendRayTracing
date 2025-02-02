@@ -2,7 +2,15 @@
 
 
 sphere::sphere(const point& c, double r, material* mat):
-  radius_(r), center_(c), mat_(mat) {};
+  radius_(r), center_(c), mat_(mat) {
+  this->move_direc_ = vec3(0.0, 0.0, 0.0);
+};
+
+sphere::sphere(const point& st, const point& ed, double r, material* mat):
+  radius_(r), center_(st), mat_(mat) {
+  this->move_direc_ = ed-st;
+  // this->move_direc_.normalize_vec();
+};
 
 sphere::~sphere() = default;
 
@@ -13,8 +21,8 @@ sphere::~sphere() = default;
 /// @param rec 
 /// @return 
 bool sphere::hit(const ray& r, interval domain, hit_record& rec) const {
-
-  vec3 vec_sphere = this->center_-r.origin();
+  point cur_cen = r.time()*this->move_direc_+this->center_;
+  vec3 vec_sphere = cur_cen-r.origin();
   // Project the vec to ray direc
   double factor = dot(vec_sphere, r.direction());
   vec3 dist_vec = factor*r.direction()-vec_sphere;
@@ -22,7 +30,7 @@ bool sphere::hit(const ray& r, interval domain, hit_record& rec) const {
   if (dist<=this->radius_ && factor>0){
 
     double t = std::sqrt(this->radius_*this->radius_-dist*dist);
-    point near_pt =  this->center_+dist_vec-r.direction()*t;
+    point near_pt =  cur_cen+dist_vec-r.direction()*t;
     double ray_len = (near_pt-r.origin()).length();
 
     if (!domain.contains(ray_len)){
@@ -30,14 +38,14 @@ bool sphere::hit(const ray& r, interval domain, hit_record& rec) const {
     }
     // Just self
     if ((near_pt-r.origin()).length()<NEAR_ZERO_BUF){
-      near_pt =  this->center_+dist_vec+r.direction()*t;
+      near_pt = cur_cen+dist_vec+r.direction()*t;
       ray_len = (near_pt-r.origin()).length();
       if (!domain.contains(ray_len)){
         return false;
       }
     }
     rec.p =near_pt;
-    rec.normal = rec.p-this->center_;
+    rec.normal = rec.p-cur_cen;
     rec.normal.normalize_vec();
     rec.t = ray_len;
     rec.mat = this->mat_;

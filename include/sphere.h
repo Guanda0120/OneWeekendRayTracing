@@ -12,9 +12,23 @@ class sphere: public hittable
     double radius_;
     point center_;
     material* mat_;
+    vec3 move_direc_;
 
   public:
+    
+    /// @brief Statable Sphere
+    /// @param c the station center
+    /// @param r radius
+    /// @param mat material
     sphere(const point& c, double r, material* mat);
+
+    /// @brief Movable Sphere
+    /// @param st start point
+    /// @param ed end point
+    /// @param r radius
+    /// @param mat material
+    sphere(const point& st, const point& ed, double r, material* mat);
+    
     bool hit(const ray& r, interval domain, hit_record& rec) const override ;
     
     /// @brief Dont delete the material, material will be deleted by material manager
