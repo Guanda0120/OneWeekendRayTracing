@@ -8,7 +8,7 @@ class bounding_box{
   public:
     interval x, y, z;
 
-    bounding_box()
+    bounding_box();
 
     bool hit(const ray& r);
 
