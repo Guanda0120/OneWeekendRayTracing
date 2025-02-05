@@ -18,6 +18,7 @@ set(SRC_FILES
     sphere.cpp
     hittable_list.cpp
     interval.cpp
+    bounding_box.cpp
 )
 
 add_subdirectory(materials)
