@@ -6,6 +6,7 @@ hittable_list::hittable_list(){
 
 void hittable_list::add(std::shared_ptr<hittable> hittable_obj){
   this->objects.push_back(hittable_obj);
+  this->b_box_ = bounding_box(b_box_, hittable_obj->b_box());
 };
 
 void hittable_list::clear(){
@@ -26,6 +27,10 @@ bool hittable_list::hit(const ray& r, interval domain, hit_record& rec) const {
   }
   return is_hit;
 };
+
+bounding_box hittable_list::b_box() const{
+  return this->b_box_;
+}
 
 // hittable_list::~hittable_list(){
 //   for (auto& hittable_obj: this->objects)

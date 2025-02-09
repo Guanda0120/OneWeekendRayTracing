@@ -6,7 +6,11 @@
 
 #include "hittable.h"
 
-class hittable_list{
+class hittable_list: public hittable{
+  
+  private:
+    bounding_box b_box_;
+  
   public:
     /// @brief Contaioner
     std::vector<std::shared_ptr<hittable>> objects;
@@ -27,8 +31,10 @@ class hittable_list{
     /// @param ray_tmax tmax
     /// @param rec 
     /// @return true for hit
-    bool hit(const ray& r, interval domain, hit_record& rec) const ;
+    bool hit(const ray& r, interval domain, hit_record& rec) const override;
     
+    bounding_box b_box() const override;
+
     /// @brief Delete all the hitable object
     ~hittable_list() = default;
 };

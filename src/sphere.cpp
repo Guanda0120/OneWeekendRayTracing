@@ -4,12 +4,19 @@
 sphere::sphere(const point& c, double r, material* mat):
   radius_(r), center_(c), mat_(mat) {
   this->move_direc_ = vec3(0.0, 0.0, 0.0);
+  point min_pt = point(c.e[0]-r,c.e[1]-r,c.e[2]-r);
+  point max_pt = point(c.e[0]+r,c.e[1]+r,c.e[2]+r);
+  this->b_box_ = bounding_box(min_pt, max_pt);
 };
 
 sphere::sphere(const point& st, const point& ed, double r, material* mat):
   radius_(r), center_(st), mat_(mat) {
   this->move_direc_ = ed-st;
   // this->move_direc_.normalize_vec();
+  vec3 radius_vec = vec3(r,r,r);
+  bounding_box st_box = bounding_box(st-radius_vec, st+radius_vec);
+  bounding_box ed_box = bounding_box(ed-radius_vec, ed+radius_vec);
+  this->b_box_ = bounding_box(st_box, ed_box);
 };
 
 sphere::~sphere() = default;
@@ -54,4 +61,8 @@ bool sphere::hit(const ray& r, interval domain, hit_record& rec) const {
     return true;
   } 
   return false;
+}
+
+bounding_box sphere::b_box() const {
+  return this->b_box_;
 }

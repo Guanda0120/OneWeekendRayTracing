@@ -13,6 +13,7 @@ class sphere: public hittable
     point center_;
     material* mat_;
     vec3 move_direc_;
+    bounding_box b_box_;
 
   public:
     
@@ -29,8 +30,17 @@ class sphere: public hittable
     /// @param mat material
     sphere(const point& st, const point& ed, double r, material* mat);
     
+    /// @brief 
+    /// @param r 
+    /// @param domain 
+    /// @param rec 
+    /// @return 
     bool hit(const ray& r, interval domain, hit_record& rec) const override ;
     
+    /// @brief Get the sphere b_box
+    /// @return 
+    bounding_box b_box() const override;
+
     /// @brief Dont delete the material, material will be deleted by material manager
     ~sphere();
 };

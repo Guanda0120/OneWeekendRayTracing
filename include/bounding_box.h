@@ -19,10 +19,23 @@ class bounding_box{
     /// @param pt2 The Second Point, not the min or max point
     bounding_box(point pt1, point pt2);
 
+    /// @brief Union two box
+    /// @param box1 
+    /// @param box2 
+    bounding_box(const bounding_box& box1, const bounding_box& box2);
+
+    /// @brief Default Bounding Box;
+    bounding_box();
+
     /// @brief Is the ray hit the bounding box
     /// @param r The ray object
     /// @return true for hit
     bool hit(const ray& r);
+
+    /// @brief Check the point is inside the bounding box
+    /// @param p point to check 
+    /// @return true for in 
+    bool contains(const point& p);
 };
 
 #endif 
