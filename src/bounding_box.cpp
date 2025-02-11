@@ -26,7 +26,7 @@ bounding_box::bounding_box(const bounding_box& box1, const bounding_box& box2){
 }
 
 
-bool bounding_box::hit(const ray& r) {
+bool bounding_box::hit(const ray& r) const {
   // The algorithm from https://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
   // Key point float/0 no exception
   // To min pt the max factor larger than max pt min factor it would not hit
@@ -61,4 +61,24 @@ bool bounding_box::hit(const ray& r) {
 
 bool bounding_box::contains(const point& p){
   return this->x_domain.contains(p.e[0]) && this->y_domain.contains(p.e[1]) && this->z_domain.contains(p.e[2]);
+}
+
+axis bounding_box::longest_axis() const{
+  if (this->x_domain.size() > this->y_domain.size() && this->x_domain.size() > this->z_domain.size()){
+    return axis::X;    
+  } else if (this->y_domain.size() > this->z_domain.size()){
+    return axis::Y;
+  } else {
+    return axis::Z;
+  }
+}
+
+interval bounding_box::axis_interval(axis ax) const {
+  if (ax==axis::X){
+    return this->x_domain;
+  } else if (ax==axis::Y){
+    return this->y_domain;
+  } else {
+    return this->z_domain;
+  }
 }

@@ -30,12 +30,18 @@ class bounding_box{
     /// @brief Is the ray hit the bounding box
     /// @param r The ray object
     /// @return true for hit
-    bool hit(const ray& r);
+    bool hit(const ray& r) const;
 
     /// @brief Check the point is inside the bounding box
     /// @param p point to check 
     /// @return true for in 
     bool contains(const point& p);
+
+    /// @brief Get the longest axis
+    /// @return 
+    axis longest_axis() const;
+    
+    interval axis_interval(axis ax) const;
 };
 
 #endif 

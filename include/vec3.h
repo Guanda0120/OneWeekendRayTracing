@@ -40,9 +40,9 @@ class vec3 {
     /// @return 
     static vec3 random(double min, double max);
 
-    double x();
-    double y();
-    double z();
+    double x() const;
+    double y() const;
+    double z() const;
 };
 
 using point = vec3;

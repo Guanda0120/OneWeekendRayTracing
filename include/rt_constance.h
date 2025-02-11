@@ -33,6 +33,12 @@ inline double random_double(double min, double max){
   return min+(max-min)*random_double();
 }
 
+enum axis{
+  X=0,
+  Y=1,
+  Z=2
+};
+
 // Common Headers
 
 
