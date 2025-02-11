@@ -19,6 +19,7 @@ set(SRC_FILES
     hittable_list.cpp
     interval.cpp
     bounding_box.cpp
+    bvh_node.cpp
 )
 
 add_subdirectory(materials)
