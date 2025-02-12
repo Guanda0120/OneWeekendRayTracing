@@ -9,6 +9,7 @@
 #include "sphere.h"
 #include "hittable_list.h"
 #include "materials/material_factory.h"
+#include "bvh_node.h"
 
 hittable_list generate_scene(){
   hittable_list world;
@@ -82,6 +83,9 @@ int main(){
   // world.add(right_ball);
   
   hittable_list world = generate_scene();
+  shared_ptr<bvh_node> node = std::make_shared<bvh_node>(world);
+  world = hittable_list();
+  world.add(node);
 
   // Camera
   point p = point(13,2,3);

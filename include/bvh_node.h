@@ -17,6 +17,8 @@ class bvh_node : public hittable{
 
     bool hit(const ray& r, interval domain, hit_record& rec) const override;
 
+    bounding_box b_box() const override;
+
     ~bvh_node();
 
   private:

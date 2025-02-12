@@ -69,6 +69,8 @@ class camera{
     /// @return 
     color multi_sample_aliase(const hittable_list& entities, int i, int j, int sample_level) const;
     
+    // color multi_sample_aliase(const hittable& entity, int i, int j, int sample_level) const;
+    
     /// @brief Just use random ray to alias the edge, with this-> sample_per_pixel_
     /// @param entities 
     /// @param i 

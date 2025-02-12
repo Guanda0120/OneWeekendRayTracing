@@ -58,6 +58,14 @@ bool bvh_node::hit(const ray& r, interval domain, hit_record& rec)const{
   return false;
 }
 
+bvh_node::~bvh_node(){
+
+}
+
+bounding_box bvh_node::b_box() const{
+  return this->b_box_;
+}
+
 bool bvh_node::box_compare(const shared_ptr<hittable> a, const shared_ptr<hittable> b, axis axis_index){
   auto a_axis_interval = a->b_box().axis_interval(axis_index);
   auto b_axis_interval = b->b_box().axis_interval(axis_index);

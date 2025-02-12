@@ -25,6 +25,9 @@ bounding_box::bounding_box(const bounding_box& box1, const bounding_box& box2){
   this->max_pt = point(max_x, max_y, max_z);
 }
 
+bounding_box::bounding_box(){
+  
+}
 
 bool bounding_box::hit(const ray& r) const {
   // The algorithm from https://gamedev.stackexchange.com/questions/18436/most-efficient-aabb-vs-ray-collision-algorithms
