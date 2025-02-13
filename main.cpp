@@ -1,6 +1,7 @@
 #include<iostream>
 #include<memory>
 #include<cmath>
+#include <chrono>
 #include "vec3.h"
 #include "color.h"
 #include "image.h"
@@ -52,10 +53,10 @@ hittable_list generate_scene(){
 }
 
 int main(){
-  
+  auto start = std::chrono::high_resolution_clock::now();
   // Canvas
   double aspect_ratio = 16.0 / 9.0;
-  int image_width = 2400;
+  int image_width = 240;
   canvas cav = canvas(image_width, aspect_ratio);
   
   // initial the material
@@ -83,20 +84,20 @@ int main(){
   // world.add(right_ball);
   
   hittable_list world = generate_scene();
-  shared_ptr<bvh_node> node = std::make_shared<bvh_node>(world);
-  world = hittable_list();
-  world.add(node);
-
+  bvh_node node = bvh_node(world);
   // Camera
   point p = point(13,2,3);
   vec3 look_at= point(0,0,0)-p;
   look_at.normalize_vec();
   vec3 up_to = vec3(0,1,0);
   camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
-  
+  cam.render(node);
   image img = cam.render(world);
-  const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/MotionBlur.png";
-  // const char* file_name = "D://OneWeekendRayTracing/img/Scene_Huge.png";
+  // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/MotionBlur.png";
+  const char* file_name = "D://OneWeekendRayTracing/img/BVH_Scene_Huge.png";
   img.save_png(file_name);
   std::cout<<"Write Successful!"<<std::endl;
+  auto end = std::chrono::high_resolution_clock::now();
+  std::chrono::duration<double> elapsed = end - start;
+  std::cout << "Elapsed time: " << elapsed.count() << " seconds" << std::endl;
 };

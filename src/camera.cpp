@@ -129,6 +129,38 @@ color camera::multi_sample_aliase(const hittable_list& entities, int i, int j, i
   return c;
 }
 
+
+color camera::multi_sample_aliase(const hittable& entity, int i, int j, int sample_level) const {
+  int r=0, g=0, b=0;
+  int sample_pts = sample_level*sample_level;
+
+  double i_step = this->delta_height_/sample_level;
+  double j_step = this->delta_width_/sample_level;
+
+  for (int m=0; m<sample_level;m++){
+    for (int n=0; n<sample_level;n++){
+      vec3 tag_pt = this->start_pt_
+        +(i*this->delta_height_+i_step*m)*this->height_direction_
+        +(j*this->delta_width_+j_step*n)*this->width_direction_;
+        vec3 direc_vec = tag_pt-this->location_;
+      direc_vec.normalize_vec();
+      vec3 center = this->location_;
+      // Consider Move object
+      double tm = random_double(0, this->shutter_open_);
+      ray tmp_ray = ray(center, direc_vec, tm);
+      color tmp_color = this->cal_pixel_color_(entity, tmp_ray, this->max_depth_ - 1);
+      r+=tmp_color.r;
+      g+=tmp_color.g;
+      b+=tmp_color.b;
+    }
+  }
+  color c = color();
+  c.r = int(r/sample_pts);
+  c.g = int(g/sample_pts);
+  c.b = int(b/sample_pts);
+  return c;
+}
+
 color camera::random_ray_aliase(const hittable_list& entities, int i, int j) const {
   int r=0, g=0, b=0;
   for (int k=0; k<this->sample_per_pixel_; k++){
@@ -197,6 +229,63 @@ color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int 
      */ 
     if (record.mat->scatter(r, record, attenuation, scattered)){
       return attenuation*this->cal_pixel_color_(entities, scattered, depth-1);
+    }
+    // color c = this->cal_pixel_color_(entities, rand_ray, depth-1);
+    // c.garmmar_correction(this->gammar_coe_);    
+    return color(0,0,0);
+  } else {
+    // Not Hit just the blue gradient
+    // Here is Environment Light
+    double a = 0.5*(r.direction().y() + 1.0);    
+    c = color (
+      (1.0-a)+0.5*a,
+      (1.0-a)+0.7*a,
+      (1.0-a)+1.0*a
+    );
+  }
+  return c;
+}
+
+color camera::cal_pixel_color_(const hittable& entity, const ray& r, int depth) const {
+  if (depth<=0){
+    double a = 0.5 * (r.direction().y() + 1.0);
+    return color(
+        (1.0 - a) + 0.5 * a,
+        (1.0 - a) + 0.7 * a,
+        (1.0 - a) + 1.0 * a
+    );
+  }
+  hit_record record;
+  color c;
+  if (entity.hit(r, interval(0, 1000), record)){
+    // Get the Normalize Vector 
+    /*
+    vec3 sphere_normal = record.normal;
+    c = color(0.5*(sphere_normal.x()+1), 0.5*(sphere_normal.y()+1), 0.5*(sphere_normal.z()+1));
+    */
+    color attenuation;
+    ray scattered;
+    /*
+    vec3 sphere_normal = record.normal;
+    vec3 rand_direc = random_unit_vector_hemisphere(sphere_normal);
+    vec3 lambert_direc = rand_direc+sphere_normal;
+    lambert_direc.normalize_vec();
+    ray rand_ray = ray(record.p, lambert_direc);
+    */
+    // This recurancy Means
+    /**
+     * 
+     * 
+     *         o
+     *          \  ________________
+     *           \ |              |
+     *  0.125sky  \| 0.5sky       |
+     *         \  /|              |
+     * _________\/_|______________|______________
+     *         0.25sky 
+     */ 
+    if (record.mat->scatter(r, record, attenuation, scattered)){
+      return attenuation*this->cal_pixel_color_(entity, scattered, depth-1);
     }
     // color c = this->cal_pixel_color_(entities, rand_ray, depth-1);
     // c.garmmar_correction(this->gammar_coe_);    

@@ -69,7 +69,13 @@ class camera{
     /// @return 
     color multi_sample_aliase(const hittable_list& entities, int i, int j, int sample_level) const;
     
-    // color multi_sample_aliase(const hittable& entity, int i, int j, int sample_level) const;
+    /// @brief MSAA sample for single hittable
+    /// @param entity 
+    /// @param i 
+    /// @param j 
+    /// @param sample_level 
+    /// @return 
+    color multi_sample_aliase(const hittable& entity, int i, int j, int sample_level) const;
     
     /// @brief Just use random ray to alias the edge, with this-> sample_per_pixel_
     /// @param entities 
@@ -77,6 +83,7 @@ class camera{
     /// @param j 
     /// @return 
     color random_ray_aliase(const hittable_list& entities, int i, int j) const;
+    
     /// @brief Every pixel eject how much ray
     int sample_per_pixel_;
     /// @brief In for loop depends on i,j gives random shift ray
@@ -84,9 +91,24 @@ class camera{
     /// @param j 
     /// @return a ray
     ray get_ray(int i, int j) const;
+    
+    /// @brief Cal
+    /// @param entities 
+    /// @param r 
+    /// @param depth 
+    /// @return 
     color cal_pixel_color_(const hittable_list& entities, const ray& r, int depth) const;
+    
+    /// @brief Render Single hitable
+    /// @param entities The entities
+    /// @param r ray
+    /// @param depth  
+    /// @return color for this pixel
+    color cal_pixel_color_(const hittable& entity, const ray& r, int depth) const;
+    
     /// @brief Gammar Coefficient
     double gammar_coe_;
+    
     /// @brief The shutter open time
     double shutter_open_;
 };
