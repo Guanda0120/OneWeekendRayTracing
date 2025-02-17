@@ -18,6 +18,10 @@ struct hit_record{
     bool front_face;
     /// @brief The material of hit point
     material* mat;
+    /// @brief The texture U
+    double u;
+    /// @brief The texture V
+    double v;
 };
 
 #endif

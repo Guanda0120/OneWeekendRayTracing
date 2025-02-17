@@ -10,12 +10,13 @@
 #include "sphere.h"
 #include "hittable_list.h"
 #include "materials/material_factory.h"
+#include "materials/checker_texture.h"
 #include "bvh_node.h"
 
 hittable_list generate_scene(){
   hittable_list world;
-
-  lambertian* ground_material = new lambertian(color(0.5, 0.5, 0.5), "Ground");
+  // lambertian* ground_material = new lambertian(color(0.5, 0.5, 0.5), "Ground");
+  lambertian* ground_material = new lambertian(color(.2, .3, .1), color(.9, .9, .9), 0.32, "Checker");
   world.add(make_shared<sphere>(point(0,-1000,0), 1000, ground_material));
   for (int a = -11; a < 11; a++) {
       for (int b = -11; b < 11; b++) {
@@ -91,10 +92,9 @@ int main(){
   look_at.normalize_vec();
   vec3 up_to = vec3(0,1,0);
   camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
-  cam.render(node);
-  image img = cam.render(world);
+  image img = cam.render(node);
   // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/MotionBlur.png";
-  const char* file_name = "D://OneWeekendRayTracing/img/BVH_Scene_Huge.png";
+  const char* file_name = "D://OneWeekendRayTracing/img/Checker.png";
   img.save_png(file_name);
   std::cout<<"Write Successful!"<<std::endl;
   auto end = std::chrono::high_resolution_clock::now();

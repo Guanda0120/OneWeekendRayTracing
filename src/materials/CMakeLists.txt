@@ -5,6 +5,8 @@ set(MATERIALS_SRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/lambertian.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/metal.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dielectric.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/checker_texture.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/solid_color.cpp
 )
 
 set(MATERIALS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/materials)
