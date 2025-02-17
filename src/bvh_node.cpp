@@ -19,12 +19,17 @@ bvh_node::bvh_node(vector<shared_ptr<hittable>>list){
 
   // Sort by Longset Axis
   std::sort(list.begin(), list.end(), comparator);
+  if(list.size() == 2){
+    // total two elements
+    this->left_ = list[0];
+    this->right_ = list[1];
+    return;
+  }
   auto mid = list.size() / 2;
   vector<shared_ptr<hittable>> left_list(list.begin(), list.begin() + mid);
   vector<shared_ptr<hittable>> right_list(list.begin() + mid, list.end());
   this->left_ = make_shared<bvh_node>(left_list);
   this->right_ = make_shared<bvh_node>(right_list);
-
 }
 
 bool bvh_node::hit(const ray& r, interval domain, hit_record& rec)const{
@@ -42,13 +47,14 @@ bool bvh_node::hit(const ray& r, interval domain, hit_record& rec)const{
     domain = left_rec.t<right_rec.t? left_interval : right_interval;
     return true;
   }
-
+  
   // Just hit one
   if (hit_left){
     rec = left_rec;
     domain = left_interval;
     return true;
-  } else {
+  } 
+  if (hit_right) {
     rec = right_rec;
     domain = right_interval;
     return true;

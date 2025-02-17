@@ -57,7 +57,7 @@ int main(){
   auto start = std::chrono::high_resolution_clock::now();
   // Canvas
   double aspect_ratio = 16.0 / 9.0;
-  int image_width = 240;
+  int image_width = 2400;
   canvas cav = canvas(image_width, aspect_ratio);
   
   // initial the material

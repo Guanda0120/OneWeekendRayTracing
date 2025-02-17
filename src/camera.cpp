@@ -48,33 +48,9 @@ image camera::render(const hittable& entity){
   
   for(int i=0; i<this->pixel_height_; i++){
     for(int j=0; j<this->pixel_width_; j++){
-      // Compute distance
-      vec3 tag_vec = this->start_pt_
-        +(i*delta_height_)*this->height_direction_
-        +(j*delta_width_)*this->width_direction_;
-      vec3 direc_vec = tag_vec-this->location_;
-      
-      direc_vec.normalize_vec();
-      // Construct the ray intersect
-      ray r = ray(this->location_, direc_vec);
-      hit_record record;
-      color c;
-      if (entity.hit(r, interval(0, 100), record)){
-        // Get the Normalize Vector 
-        vec3 sphere_normal = record.normal;
-        c = color(0.5*(sphere_normal.x()+1), 0.5*(sphere_normal.y()+1), 0.5*(sphere_normal.z()+1));
-      } else {
-        // Compute Color
-        double a = 0.5*(direc_vec.y() + 1.0);
-      
-        c = color (
-          (1.0-a)+0.5*a,
-          (1.0-a)+0.7*a,
-          (1.0-a)+1.0*a
-        );
-        // Add to Image
-      }
-      
+      // color c = this->random_ray_aliase(entities, i, j);
+      color c = this->multi_sample_aliase(entity, i, j, this->sample_level_);
+      c.garmmar_correction();
       img.insert_color(j, i, c);
     }
   }
