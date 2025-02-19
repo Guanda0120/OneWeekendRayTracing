@@ -10,6 +10,11 @@ lambertian::lambertian(const color& odd, const color& even, double factor, strin
   this->name = mat_name;
 }
 
+lambertian::lambertian(const char* file_name, string mat_name){
+  this->tex_ = new image_texture(file_name);
+  this->name = mat_name;
+}
+
 
 lambertian::~lambertian(){
   delete this->tex_;

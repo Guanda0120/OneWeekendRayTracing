@@ -49,14 +49,16 @@ hittable_list generate_scene(){
   auto material2 = new lambertian(color(0.4, 0.2, 0.1), "mat");
   world.add(make_shared<sphere>(point(-4, 1, 0), 1.0, material2));
   auto material3 = new metal(color(0.7, 0.6, 0.5), "Mat", 0.0);
-  world.add(make_shared<sphere>(point(4, 1, 0), 1.0, material3));
+  const char* texture_file = "D://OneWeekendRayTracing/img/earthmap1.png";
+  lambertian* m = new lambertian(texture_file, "earth");
+  world.add(make_shared<sphere>(point(4, 1, 0), 1.0, m));
   return world;
 }
 
 void bouncing_spheres(){
   // Canvas
   double aspect_ratio = 16.0 / 9.0;
-  int image_width = 2400;
+  int image_width = 1200;
   canvas cav = canvas(image_width, aspect_ratio);
   
   // initial the material
@@ -122,14 +124,34 @@ void checker_spheres(){
   img.save_png(file_dir);
 }
 
-void load_img(){
-  image img = image("D://OneWeekendRayTracing/img/Checker2.png");
+void earth_sphere(){
+  double aspect_ratio = 16.0 / 9.0;
+  int image_width = 1200;
+  canvas cav = canvas(image_width, aspect_ratio);
+
+  hittable_list world;
+  const char* texture_file = "D://OneWeekendRayTracing/img/earthmap1.png";
+  lambertian* m = new lambertian(texture_file, "earth");
+
+  world.add(make_shared<sphere>(point(0,0, 0), 2, m));
+  bvh_node node = bvh_node(world);
+  
+  // Camera
+  point p = point(0,0,12);
+  vec3 look_at= point(0,0,0)-p;
+  look_at.normalize_vec();
+  vec3 up_to = vec3(0,1,0);
+  camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
+
+  image img = cam.render(node);
+  const char* file_dir = "D://OneWeekendRayTracing/img/Earth.png";
+  img.save_png(file_dir);
 }
 
 int main(){
   auto start = std::chrono::high_resolution_clock::now();
   // bouncing_spheres();
-  load_img();
+  bouncing_spheres();
   std::cout<<"Write Successful!"<<std::endl;
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed = end - start;

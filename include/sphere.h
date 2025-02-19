@@ -14,7 +14,7 @@ class sphere: public hittable
     material* mat_;
     vec3 move_direc_;
     bounding_box b_box_;
-    void get_sphere_uv(const point& p, double u, double v) const;
+    uv get_sphere_uv(const point& p) const;
 
   public:
     

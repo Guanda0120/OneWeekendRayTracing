@@ -6,6 +6,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <vector>
+#include <algorithm>
 
 class image{
   public:

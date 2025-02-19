@@ -39,6 +39,12 @@ enum axis{
   Z=2
 };
 
+struct uv{
+  double u;
+  double v;
+  uv(double u, double v): u(u), v(v){};
+};
+
 // Common Headers
 
 

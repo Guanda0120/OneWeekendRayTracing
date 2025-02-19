@@ -58,7 +58,10 @@ bool sphere::hit(const ray& r, interval domain, hit_record& rec) const {
     rec.mat = this->mat_;
     rec.front_face = dot(rec.normal, r.direction())<0;
     rec.normal = rec.front_face? rec.normal:-rec.normal;
-    this->get_sphere_uv(rec.p, rec.u, rec.v);
+    double u, v;
+    uv tmp_uv = this->get_sphere_uv(rec.p);
+    rec.u = tmp_uv.u;
+    rec.v = tmp_uv.v;
     return true;
   } 
   return false;
@@ -68,12 +71,25 @@ bounding_box sphere::b_box() const {
   return this->b_box_;
 }
 
-void sphere::get_sphere_uv(const point& p, double u, double v)const{
+uv sphere::get_sphere_uv(const point& p)const{
   vec3 move = point(0,0,0) - this->center_;
   point ref_pt = p + move;
   ref_pt.normalize_vec();
-  double theta =  std::acos(-ref_pt.y());
+  // 计算theta，确保其范围在[0, pi]之间
+  double theta = std::acos(-ref_pt.y());
+    
+  // 计算phi，确保其范围在[0, 2*pi)之间
   double phi = std::atan2(-ref_pt.z(), ref_pt.x()) + pi;
-  u = phi / (2*pi);
-  v = theta / pi;
+  if (phi < 0) {
+      std::cout<<"phi"<<phi<<std::endl; // 保证phi在[0, 2*pi)范围内
+  }
+  if (theta < 0) {
+    std::cout<<"theta"<<theta<<std::endl;  // 保证phi在[0, 2*pi)范围内
 }
+
+  // 将球面坐标映射到UV空间
+  double u = phi / (2 * pi);  // u 范围应该在[0, 1]之间
+  double v = theta / pi;      // v 范围应该在[0, 1]之间
+  return uv(u,1.0-v);
+}
+

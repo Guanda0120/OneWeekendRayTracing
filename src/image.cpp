@@ -6,18 +6,19 @@ image::image(int width, int height):width_(width), height_(height){
 }
 
 image::image(const char* file_name){
-  FILE *fp = fopen(file_name, "rb");
+  FILE* fp = fopen(file_name, "rb");
   if (!fp) {
       throw std::runtime_error("Failed to open PNG file.");
   }
 
-  // 读取 PNG 文件头信息
+  // 创建PNG读取结构体
   png_structp png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
   if (!png) {
       fclose(fp);
       throw std::runtime_error("Failed to create PNG read struct.");
   }
 
+  // 创建PNG信息结构体
   png_infop info = png_create_info_struct(png);
   if (!info) {
       png_destroy_read_struct(&png, NULL, NULL);
@@ -25,54 +26,88 @@ image::image(const char* file_name){
       throw std::runtime_error("Failed to create PNG info struct.");
   }
 
+  // 错误处理
   if (setjmp(png_jmpbuf(png))) {
       png_destroy_read_struct(&png, &info, NULL);
       fclose(fp);
-      throw std::runtime_error("PNG read error.");
+      throw std::runtime_error("PNG reading error.");
   }
 
   png_init_io(png, fp);
+
+  // 读取PNG文件头部信息
   png_read_info(png, info);
 
+  // 获取图像宽度，高度和颜色类型等
   width_ = png_get_image_width(png, info);
   height_ = png_get_image_height(png, info);
-  int bit_depth = png_get_bit_depth(png, info);
   int color_type = png_get_color_type(png, info);
+  int bit_depth = png_get_bit_depth(png, info);
 
-  // 仅支持 RGB 或 RGBA
+  // 确保我们只处理RGB或者RGBA图像
   if (color_type != PNG_COLOR_TYPE_RGB && color_type != PNG_COLOR_TYPE_RGBA) {
       png_destroy_read_struct(&png, &info, NULL);
       fclose(fp);
-      throw std::runtime_error("Unsupported PNG color type.");
+      throw std::runtime_error("Only RGB or RGBA images are supported.");
   }
-  std::cout<<sizeof(color)<<std::endl;
-  // 设定适当的色深
+
+  // 如果图像是16位深度，转换为8位深度
   if (bit_depth == 16) {
-    png_set_strip_16(png);
+      png_set_strip_16(png);
   }
-
-  png_read_update_info(png, info);
-
-  // 为 image_ 分配内存
-  image_ = new color[width_ * height_];
 
   // 读取图像数据
-  png_bytep* rows = new png_bytep[height_];
-  for (int y = 0; y < height_; ++y) {
-    rows[y] = (png_bytep)(image_ + y * width_);
+  png_read_update_info(png, info);
+
+  // 分配内存来存储图像数据
+  std::vector<png_bytep> row_pointers(height_);
+  for (int y = 0; y < height_; y++) {
+      row_pointers[y] = (png_byte*)malloc(png_get_rowbytes(png, info));
   }
 
-  png_read_image(png, rows);
+  // 读取图像的每一行数据
+  png_read_image(png, row_pointers.data());
 
-  delete[] rows;
+  // 初始化image_数组
+  this->image_ = new color[width_ * height_];
+
+  // 将图像数据转换为color对象
+  for (int y = 0; y < height_; ++y) {
+      for (int x = 0; x < width_; ++x) {
+          // 如果是RGBA格式，加入Alpha通道
+        if (color_type == PNG_COLOR_TYPE_RGBA) {
+          png_bytep px_alpha = &(row_pointers[y][x * 4]);  // 每个像素有4个通道
+          double r = px_alpha[0] / 255.0;  // Red
+          double g = px_alpha[1] / 255.0;  // Green
+          double b = px_alpha[2] / 255.0;  // Blue
+          double a = px_alpha[3] / 255.0;  // Alpha
+        
+          // 将图像数据存储为color对象
+          this->image_[y * width_ + x] = color(r, g, b);  // 假设color类支持Alpha通道
+        } else {
+          // 如果是RGB格式，不处理Alpha
+          png_bytep px = &(row_pointers[y][x * 3]);  // 每个像素有3个通道
+          double r = px[0] / 255.0;
+          double g = px[1] / 255.0;
+          double b = px[2] / 255.0;
+        
+          this->image_[y * width_ + x] = color(r, g, b);
+        }
+      }
+  }
+
+  // 释放内存
+  for (int y = 0; y < height_; ++y) {
+      free(row_pointers[y]);
+  }
 
   png_destroy_read_struct(&png, &info, NULL);
   fclose(fp);
 }
 
 color image::index_uv(double u, double v) const {
-  size_t v_idx = size_t(std::floor(v/this->height_));
-  size_t u_idx = size_t(std::floor(u/this->width_));
+  size_t v_idx = size_t(std::floor(v*(this->height_-1)));
+  size_t u_idx = size_t(std::floor(u*(this->width_-1)));
   return this->image_[v_idx*this->width_+u_idx];
 }
 
