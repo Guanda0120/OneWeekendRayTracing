@@ -19,29 +19,29 @@ hittable_list generate_scene(){
   lambertian* ground_material = new lambertian(color(.2, .3, .1), color(.9, .9, .9), 0.32, "Checker");
   world.add(make_shared<sphere>(point(0,-1000,0), 1000, ground_material));
   for (int a = -11; a < 11; a++) {
-      for (int b = -11; b < 11; b++) {
-          auto choose_mat = random_double();
-          point center(a + 0.9*random_double(), 0.2, b + 0.9*random_double());
-          if ((center - point(4, 0.2, 0)).length() > 0.9) {
-              material* sphere_material;
-              if (choose_mat < 0.8) {
-                  // diffuse
-                  auto albedo = color::random() * color::random();
-                  sphere_material = new lambertian(albedo, "Mat");
-                  auto center2 = center + vec3(0, random_double(0,.5), 0);
-                  world.add(make_shared<sphere>(center, center2, 0.2, sphere_material));
-              } else if (choose_mat < 0.95) {
-                  // metal
-                  auto albedo = color::random(0.5, 1);
-                  auto fuzz = random_double(0, 0.5);
-                  sphere_material = new metal(albedo, "mat", fuzz);
-                  world.add(make_shared<sphere>(center, 0.2, sphere_material));
-              } else {
-                  // glass
-                  sphere_material = new dielectric(1.5, "mat");
-                  world.add(make_shared<sphere>(center, 0.2, sphere_material));
-              }
+    for (int b = -11; b < 11; b++) {
+      auto choose_mat = random_double();
+      point center(a + 0.9*random_double(), 0.2, b + 0.9*random_double());
+      if ((center - point(4, 0.2, 0)).length() > 0.9) {
+        material* sphere_material;
+        if (choose_mat < 0.8) {
+          // diffuse
+          auto albedo = color::random() * color::random();
+          sphere_material = new lambertian(albedo, "Mat");
+          auto center2 = center + vec3(0, random_double(0,.5), 0);
+          world.add(make_shared<sphere>(center, center2, 0.2, sphere_material));
+        } else if (choose_mat < 0.95) {
+          // metal
+          auto albedo = color::random(0.5, 1);
+          auto fuzz = random_double(0, 0.5);
+          sphere_material = new metal(albedo, "mat", fuzz);
+          world.add(make_shared<sphere>(center, 0.2, sphere_material));
+        } else {
+          // glass
+          sphere_material = new dielectric(1.5, "mat");
+          world.add(make_shared<sphere>(center, 0.2, sphere_material));
           }
+        }
       }
   }
   auto material1 = new dielectric(1.5, "mat");
@@ -53,8 +53,7 @@ hittable_list generate_scene(){
   return world;
 }
 
-int main(){
-  auto start = std::chrono::high_resolution_clock::now();
+void bouncing_spheres(){
   // Canvas
   double aspect_ratio = 16.0 / 9.0;
   int image_width = 2400;
@@ -96,6 +95,41 @@ int main(){
   // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/MotionBlur.png";
   const char* file_name = "D://OneWeekendRayTracing/img/Checker.png";
   img.save_png(file_name);
+}
+
+void checker_spheres(){
+
+  double aspect_ratio = 16.0 / 9.0;
+  int image_width = 2400;
+  canvas cav = canvas(image_width, aspect_ratio);
+
+  hittable_list world;
+
+  lambertian* m = new lambertian(color(.2, .3, .1), color(.9, .9, .9), 3, "checker");
+  world.add(make_shared<sphere>(point(0,-10, 0), 10, m));
+  world.add(make_shared<sphere>(point(0, 10, 0), 10, m));
+  bvh_node node = bvh_node(world);
+  
+  // Camera
+  point p = point(13,2,3);
+  vec3 look_at= point(0,0,0)-p;
+  look_at.normalize_vec();
+  vec3 up_to = vec3(0,1,0);
+  camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
+
+  image img = cam.render(node);
+  const char* file_dir = "D://OneWeekendRayTracing/img/Checker2.png";
+  img.save_png(file_dir);
+}
+
+void load_img(){
+  image img = image("D://OneWeekendRayTracing/img/Checker2.png");
+}
+
+int main(){
+  auto start = std::chrono::high_resolution_clock::now();
+  // bouncing_spheres();
+  load_img();
   std::cout<<"Write Successful!"<<std::endl;
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed = end - start;

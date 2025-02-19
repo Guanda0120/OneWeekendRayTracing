@@ -58,6 +58,7 @@ bool sphere::hit(const ray& r, interval domain, hit_record& rec) const {
     rec.mat = this->mat_;
     rec.front_face = dot(rec.normal, r.direction())<0;
     rec.normal = rec.front_face? rec.normal:-rec.normal;
+    this->get_sphere_uv(rec.p, rec.u, rec.v);
     return true;
   } 
   return false;
@@ -65,4 +66,14 @@ bool sphere::hit(const ray& r, interval domain, hit_record& rec) const {
 
 bounding_box sphere::b_box() const {
   return this->b_box_;
+}
+
+void sphere::get_sphere_uv(const point& p, double u, double v)const{
+  vec3 move = point(0,0,0) - this->center_;
+  point ref_pt = p + move;
+  ref_pt.normalize_vec();
+  double theta =  std::acos(-ref_pt.y());
+  double phi = std::atan2(-ref_pt.z(), ref_pt.x()) + pi;
+  u = phi / (2*pi);
+  v = theta / pi;
 }
