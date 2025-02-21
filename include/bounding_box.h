@@ -6,6 +6,9 @@
 #include "ray.h"
 
 class bounding_box{
+  private:
+    void padding_minimums();
+  
   public:
     
     /// @brief The x, y, z domain 
@@ -39,7 +42,7 @@ class bounding_box{
 
     /// @brief Get the longest axis
     /// @return 
-    axis longest_axis() const;
+    axis longest_axis()  const;
     
     interval axis_interval(axis ax) const;
 };

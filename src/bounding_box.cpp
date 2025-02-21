@@ -6,6 +6,7 @@ bounding_box::bounding_box(point pt1, point pt2){
   this->z_domain = interval(std::min(pt1.z(), pt2.z()), std::max(pt1.z(), pt2.z()));
   this->max_pt = point(this->x_domain.max, this->y_domain.max, this->z_domain.max);
   this->min_pt = point(this->x_domain.min, this->y_domain.min, this->z_domain.min);
+  this->padding_minimums();
 }
 
 bounding_box::bounding_box(const bounding_box& box1, const bounding_box& box2){
@@ -27,6 +28,26 @@ bounding_box::bounding_box(const bounding_box& box1, const bounding_box& box2){
 
 bounding_box::bounding_box(){
   
+}
+
+void bounding_box::padding_minimums(){
+  bool need_update = false;
+  if (this->x_domain.size()<NEAR_ZERO_BUF){
+    this->x_domain.expand(NEAR_ZERO_BUF);
+    need_update=true;
+  }
+  if (this->y_domain.size()<NEAR_ZERO_BUF){
+    this->y_domain.expand(NEAR_ZERO_BUF);
+    need_update=true;
+  }
+  if (this->z_domain.size()<NEAR_ZERO_BUF){
+    this->z_domain.expand(NEAR_ZERO_BUF);
+    need_update=true;
+  }
+  if (need_update){
+    this->min_pt = point(this->x_domain.min, this->y_domain.min, this->z_domain.min);
+    this->max_pt = point(this->x_domain.max, this->y_domain.max, this->z_domain.max);
+  }
 }
 
 bool bounding_box::hit(const ray& r) const {

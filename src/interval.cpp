@@ -16,3 +16,8 @@ bool interval::contains(double t) const{
 bool interval::surrounds(double t) const{
   return this->min<t && t<this->max;
 }
+
+void interval::expand(double epsilon){
+  this->min-=epsilon/2;
+  this->max+=epsilon/2;
+}

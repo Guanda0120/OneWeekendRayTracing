@@ -8,6 +8,7 @@
 #include "canvas.h"
 #include "camera.h"
 #include "sphere.h"
+#include "quad.h"
 #include "hittable_list.h"
 #include "materials/material_factory.h"
 #include "materials/checker_texture.h"
@@ -130,7 +131,7 @@ void earth_sphere(){
   canvas cav = canvas(image_width, aspect_ratio);
 
   hittable_list world;
-  const char* texture_file = "D://OneWeekendRayTracing/img/earthmap1.png";
+  const char* texture_file = "D://OneWeekendRayTracing/img/earthmap.png";
   lambertian* m = new lambertian(texture_file, "earth");
 
   world.add(make_shared<sphere>(point(0,0, 0), 2, m));
@@ -148,10 +149,42 @@ void earth_sphere(){
   img.save_png(file_dir);
 }
 
+void quad_render(){
+  hittable_list world;
+  // Canvas
+  double aspect_ratio = 16.0 / 9.0;
+  int image_width = 300;
+  canvas cav = canvas(image_width, aspect_ratio);
+  // Materials
+  auto left_red     = new lambertian(color(1.0, 0.2, 0.2), "red");
+  auto back_green   = new lambertian(color(0.2, 1.0, 0.2), "green");
+  auto right_blue   = new lambertian(color(0.2, 0.2, 1.0), "blue");
+  auto upper_orange = new lambertian(color(1.0, 0.5, 0.0), "orange");
+  auto lower_teal   = new lambertian(color(0.2, 0.8, 0.8), "teal");
+  // Quads
+  world.add(make_shared<quad>(point(-3,-2, 5), vec3(0, 0,-4), vec3(0, 4, 0), left_red));
+  world.add(make_shared<quad>(point(-2,-2, 0), vec3(4, 0, 0), vec3(0, 4, 0), back_green));
+  world.add(make_shared<quad>(point( 3,-2, 1), vec3(0, 0, 4), vec3(0, 4, 0), right_blue));
+  world.add(make_shared<quad>(point(-2, 3, 1), vec3(4, 0, 0), vec3(0, 0, 4), upper_orange));
+  world.add(make_shared<quad>(point(-2,-3, 5), vec3(4, 0, 0), vec3(0, 0,-4), lower_teal));
+  bvh_node node = bvh_node(world);
+  // Camera
+  point p = point(0,0,9);
+  vec3 look_at= point(0,0,0)-p;
+  look_at.normalize_vec();
+  vec3 up_to = vec3(0,1,0);
+  camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
+  image img = cam.render(node);
+  // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/MotionBlur.png";
+  const char* file_name = "D://OneWeekendRayTracing/img/iii.png";
+  img.save_png(file_name);
+
+}
+
 int main(){
   auto start = std::chrono::high_resolution_clock::now();
   // bouncing_spheres();
-  bouncing_spheres();
+  quad_render();
   std::cout<<"Write Successful!"<<std::endl;
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed = end - start;

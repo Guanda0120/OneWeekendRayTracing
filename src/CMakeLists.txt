@@ -20,6 +20,7 @@ set(SRC_FILES
     interval.cpp
     bounding_box.cpp
     bvh_node.cpp
+    quad.cpp
 )
 
 add_subdirectory(materials)

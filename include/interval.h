@@ -13,6 +13,7 @@ class interval{
     double size() const;
     bool contains(double x) const;
     bool surrounds(double x) const;
+    void expand(double epsilon);
     static const interval universe, empty;
 };
 

@@ -43,6 +43,7 @@ struct uv{
   double u;
   double v;
   uv(double u, double v): u(u), v(v){};
+  uv(): u(0), v(0){};
 };
 
 // Common Headers
