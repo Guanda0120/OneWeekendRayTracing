@@ -8,6 +8,8 @@ set(MATERIALS_SRC_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/checker_texture.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/solid_color.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/image_texture.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/perlin_noise.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/perlin_texture.cpp
 )
 
 set(MATERIALS_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include/materials)

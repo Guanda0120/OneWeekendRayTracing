@@ -103,14 +103,13 @@ void bouncing_spheres(){
 void checker_spheres(){
 
   double aspect_ratio = 16.0 / 9.0;
-  int image_width = 2400;
+  int image_width = 1000;
   canvas cav = canvas(image_width, aspect_ratio);
 
   hittable_list world;
-
-  lambertian* m = new lambertian(color(.2, .3, .1), color(.9, .9, .9), 3, "checker");
-  world.add(make_shared<sphere>(point(0,-10, 0), 10, m));
-  world.add(make_shared<sphere>(point(0, 10, 0), 10, m));
+  lambertian* m = new lambertian(4, "checker");
+  world.add(make_shared<sphere>(point(0,-1000, 0), 1000, m));
+  world.add(make_shared<sphere>(point(0, 2, 0), 2, m));
   bvh_node node = bvh_node(world);
   
   // Camera
@@ -121,7 +120,7 @@ void checker_spheres(){
   camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
 
   image img = cam.render(node);
-  const char* file_dir = "D://OneWeekendRayTracing/img/Checker2.png";
+  const char* file_dir = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Perlin.png";
   img.save_png(file_dir);
 }
 
@@ -193,7 +192,8 @@ void TEST_QUAD(){
 int main(){
   auto start = std::chrono::high_resolution_clock::now();
   // bouncing_spheres();
-  quad_render();
+  // quad_render();
+  checker_spheres();
   // TEST_QUAD();
   std::cout<<"Write Successful!"<<std::endl;
   auto end = std::chrono::high_resolution_clock::now();

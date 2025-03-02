@@ -33,6 +33,24 @@ inline double random_double(double min, double max){
   return min+(max-min)*random_double();
 }
 
+inline int random_int(int min, int max){
+      // 确保 min <= max
+      if (min > max) {
+        int temp = min;
+        min = max;
+        max = temp;
+    }
+
+    // 生成 [0, RAND_MAX] 范围内的随机数
+    int random_value = std::rand();
+
+    // 将随机数映射到 [min, max] 范围内
+    int range = max - min + 1;
+    int result = min + (random_value % range);
+
+    return result;
+}
+
 enum axis{
   X=0,
   Y=1,
