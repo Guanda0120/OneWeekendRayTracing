@@ -153,7 +153,7 @@ void quad_render(){
   hittable_list world;
   // Canvas
   double aspect_ratio = 16.0 / 9.0;
-  int image_width = 300;
+  int image_width = 1000;
   canvas cav = canvas(image_width, aspect_ratio);
   // Materials
   auto left_red     = new lambertian(color(1.0, 0.2, 0.2), "red");
@@ -173,18 +173,28 @@ void quad_render(){
   vec3 look_at= point(0,0,0)-p;
   look_at.normalize_vec();
   vec3 up_to = vec3(0,1,0);
-  camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
-  image img = cam.render(node);
-  // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/MotionBlur.png";
-  const char* file_name = "D://OneWeekendRayTracing/img/iii.png";
-  img.save_png(file_name);
+  camera cam = camera(cav, pi*80/180, 100.0, p, look_at, up_to);
 
+  image img = cam.render(node);
+  const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Quad.png";
+  // const char* file_name = "D://OneWeekendRayTracing/img/iii.png";
+  img.save_png(file_name);
+}
+
+void TEST_QUAD(){
+  auto left_red     = new lambertian(color(1.0, 0.2, 0.2), "red");
+  quad q = quad(point(-3,-2, 5), vec3(0, 0,-4), vec3(0, 4, 0), left_red);
+  ray r = ray( point(0,0,9), vec3(-3,0,3)-vec3(0,0,9));
+  hit_record rec;
+  bool hit_or_not = q.hit(r, interval(0,1000),rec);
+  std::cout<<hit_or_not<<std::endl;
 }
 
 int main(){
   auto start = std::chrono::high_resolution_clock::now();
   // bouncing_spheres();
   quad_render();
+  // TEST_QUAD();
   std::cout<<"Write Successful!"<<std::endl;
   auto end = std::chrono::high_resolution_clock::now();
   std::chrono::duration<double> elapsed = end - start;

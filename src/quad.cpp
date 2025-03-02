@@ -31,7 +31,7 @@ bool quad::hit(const ray& r, interval ray_t, hit_record& rec) const{
   double alpha = dot(this->w_, cross(dir_pt, this->v_));
   double beta = dot(this->w_, cross(this->u_, dir_pt));
   uv uv_;
-  if (this->factor_contains_(alpha, beta, uv_)){
+  if (!this->factor_contains_(alpha, beta, uv_)){
     return false;
   }
   rec.t = factor;
