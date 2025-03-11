@@ -60,6 +60,16 @@
         "optional": "cpp",
         "ratio": "cpp",
         "sstream": "cpp",
-        "algorithm": "cpp"
-    }
+        "algorithm": "cpp",
+        "array": "cpp",
+        "*.tcc": "cpp",
+        "cwctype": "cpp",
+        "deque": "cpp",
+        "functional": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "string_view": "cpp",
+        "numbers": "cpp"
+    },
+    "C_Cpp.default.compilerPath": "C:/mingw64/bin/g++.exe"
 }

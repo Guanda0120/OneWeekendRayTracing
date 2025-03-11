@@ -11,6 +11,7 @@
 #include "quad.h"
 #include "hittable_list.h"
 #include "materials/material_factory.h"
+#include "materials/gradiant.h"
 #include "materials/checker_texture.h"
 #include "bvh_node.h"
 
@@ -94,6 +95,7 @@ void bouncing_spheres(){
   look_at.normalize_vec();
   vec3 up_to = vec3(0,1,0);
   camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
+  cam.set_bkg(new gradiant(color(1,1,1), color(0.5,0.7,1.0), "Grad"));
   image img = cam.render(node);
   // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/MotionBlur.png";
   const char* file_name = "D://OneWeekendRayTracing/img/Checker.png";
@@ -118,9 +120,12 @@ void checker_spheres(){
   look_at.normalize_vec();
   vec3 up_to = vec3(0,1,0);
   camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
+  cam.set_bkg(new gradiant(color(1,1,1), color(0.5,0.7,1.0), "Grad"));
 
   image img = cam.render(node);
-  const char* file_dir = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Perlin.png";
+  // const char* file_dir = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Perlin.png";
+  const char* file_dir = "D://OneWeekendRayTracing/img/Perlin.png";
+  
   img.save_png(file_dir);
 }
 
@@ -142,6 +147,7 @@ void earth_sphere(){
   look_at.normalize_vec();
   vec3 up_to = vec3(0,1,0);
   camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
+  cam.set_bkg(new gradiant(color(1,1,1), color(0.5,0.7,1.0), "Grad"));
 
   image img = cam.render(node);
   const char* file_dir = "D://OneWeekendRayTracing/img/Earth.png";
@@ -173,10 +179,11 @@ void quad_render(){
   look_at.normalize_vec();
   vec3 up_to = vec3(0,1,0);
   camera cam = camera(cav, pi*80/180, 100.0, p, look_at, up_to);
+  cam.set_bkg(new gradiant(color(1,1,1), color(0.5,0.7,1.0), "Grad"));
 
   image img = cam.render(node);
-  const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Quad.png";
-  // const char* file_name = "D://OneWeekendRayTracing/img/iii.png";
+  // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Quad.png";
+  const char* file_name = "D://OneWeekendRayTracing/img/iii.png";
   img.save_png(file_name);
 }
 

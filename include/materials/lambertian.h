@@ -9,7 +9,7 @@
 #include "materials/perlin_texture.h"
 
 
-class lambertian:public material {
+class lambertian: public material {
   public:
     lambertian(const color& albedo, string mat_name);
     lambertian(const color& odd, const color& even, double factor, string mat_name);

@@ -11,6 +11,7 @@ class perlin_texture: public texture{
     color value(double u, double v, const point& p) const override;
   private:
     perlin_noise noise;
+    double scale_;
 };
 
 #endif

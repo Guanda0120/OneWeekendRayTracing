@@ -24,8 +24,10 @@ class camera{
       vec3 look_at = vec3(0,0,-1),
       vec3 up_at = vec3(0,1,0)
     );
+    ~camera();
     image render(const hittable& entity);
     image render(const hittable_list& entities);
+    void set_bkg(material* mat);
 
   private:
     /// @brief Field of View, Tipically of horizontal
@@ -62,6 +64,8 @@ class camera{
     int sample_level_;
     /// @brief the scatter search depth.
     int max_depth_;
+    /// @brief No Intersect color 
+    material* background_;
     /// @brief Using MSAA Multi Sampling Anti Alias
     /// @param entities 
     /// @param i 

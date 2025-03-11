@@ -42,6 +42,14 @@ camera::camera(
   // this->start_pt_ = point(-this->viewport_width_/2, this->viewport_height_/2, -this->far_plane_dist_);
 };
 
+camera::~camera(){
+  delete this->background_;
+}
+
+void camera::set_bkg(material* mat){
+  this->background_ = mat;
+}
+
 image camera::render(const hittable& entity){
   // Image on stack
   image img = image(this->pixel_width_, this->pixel_height_);
@@ -223,24 +231,22 @@ color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int 
 }
 
 color camera::cal_pixel_color_(const hittable& entity, const ray& r, int depth) const {
-  if (depth<=0){
-    double a = 0.5 * (r.direction().y() + 1.0);
-    return color(
-        (1.0 - a) + 0.5 * a,
-        (1.0 - a) + 0.7 * a,
-        (1.0 - a) + 1.0 * a
-    );
-  }
+  color attenuation;
+  ray scattered;
   hit_record record;
   color c;
+  if (depth<=0){
+    this->background_->scatter(r, record, attenuation, scattered);
+    return attenuation;
+  }
+
   if (entity.hit(r, interval(0, 1000), record)){
     // Get the Normalize Vector 
     /*
     vec3 sphere_normal = record.normal;
     c = color(0.5*(sphere_normal.x()+1), 0.5*(sphere_normal.y()+1), 0.5*(sphere_normal.z()+1));
     */
-    color attenuation;
-    ray scattered;
+
     /*
     vec3 sphere_normal = record.normal;
     vec3 rand_direc = random_unit_vector_hemisphere(sphere_normal);
@@ -269,12 +275,8 @@ color camera::cal_pixel_color_(const hittable& entity, const ray& r, int depth) 
   } else {
     // Not Hit just the blue gradient
     // Here is Environment Light
-    double a = 0.5*(r.direction().y() + 1.0);    
-    c = color (
-      (1.0-a)+0.5*a,
-      (1.0-a)+0.7*a,
-      (1.0-a)+1.0*a
-    );
+    this->background_->scatter(r, record, attenuation, scattered);
+    return attenuation;
   }
   return c;
 }
