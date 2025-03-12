@@ -13,6 +13,7 @@
 #include "materials/material_factory.h"
 #include "materials/gradiant.h"
 #include "materials/checker_texture.h"
+#include "materials/diffuse_light.h"
 #include "bvh_node.h"
 
 hittable_list generate_scene(){
@@ -112,15 +113,19 @@ void checker_spheres(){
   lambertian* m = new lambertian(4, "checker");
   world.add(make_shared<sphere>(point(0,-1000, 0), 1000, m));
   world.add(make_shared<sphere>(point(0, 2, 0), 2, m));
+
+  auto difflight = new diffuse_light(color(1,1,1));
+  world.add(make_shared<quad>(point(-2,1,0), vec3(4,0,0), vec3(0,4,0), difflight));
+
   bvh_node node = bvh_node(world);
   
   // Camera
-  point p = point(13,2,3);
-  vec3 look_at= point(0,0,0)-p;
+  point p = point(0,2,9);
+  vec3 look_at= point(0,2,0)-p;
   look_at.normalize_vec();
   vec3 up_to = vec3(0,1,0);
-  camera cam = camera(cav, pi*35/180, 100.0, p, look_at, up_to);
-  cam.set_bkg(new gradiant(color(1,1,1), color(0.5,0.7,1.0), "Grad"));
+  camera cam = camera(cav, pi*75/180, 100.0, p, look_at, up_to);
+  cam.set_bkg(new lambertian(color(0,0,0), "Darkness"));
 
   image img = cam.render(node);
   // const char* file_dir = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Perlin.png";
@@ -181,7 +186,7 @@ void quad_render(){
   camera cam = camera(cav, pi*80/180, 100.0, p, look_at, up_to);
   cam.set_bkg(new gradiant(color(1,1,1), color(0.5,0.7,1.0), "Grad"));
 
-  image img = cam.render(node);
+  image img = cam.render(world);
   // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Quad.png";
   const char* file_name = "D://OneWeekendRayTracing/img/iii.png";
   img.save_png(file_name);
@@ -196,11 +201,39 @@ void TEST_QUAD(){
   std::cout<<hit_or_not<<std::endl;
 }
 
+void simple_light() {
+  double aspect_ratio = 16.0 / 9.0;
+  int image_width = 1000;
+  canvas cav = canvas(image_width, aspect_ratio);
+  
+  hittable_list world;
+
+  auto per_mat = new lambertian(4.0, "perlin");
+  world.add(make_shared<sphere>(point(0,-1000,0), 1000, per_mat));
+  world.add(make_shared<sphere>(point(0,2,0), 2, per_mat));
+
+  auto difflight = new diffuse_light(color(4,4,4));
+  world.add(make_shared<quad>(point(3,1,-2), vec3(2,0,0), vec3(0,2,0), difflight));
+
+  bvh_node node = bvh_node(world);
+  point origin = point(26,3,6);
+  point dest =  point(0,2,0);
+  vec3 up = vec3(0,1,0);
+  camera cam(cav, 20, 1000, origin, dest, up);
+  cam.set_bkg(new lambertian(color(0,0,0), "Darkness"));
+
+  auto img = cam.render(node);
+
+  const char* file_name = "D://OneWeekendRayTracing/img/light.png";
+  img.save_png(file_name);
+}
+
 int main(){
   auto start = std::chrono::high_resolution_clock::now();
   // bouncing_spheres();
   // quad_render();
   checker_spheres();
+  // simple_light();
   // TEST_QUAD();
   std::cout<<"Write Successful!"<<std::endl;
   auto end = std::chrono::high_resolution_clock::now();

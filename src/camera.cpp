@@ -56,6 +56,9 @@ image camera::render(const hittable& entity){
   
   for(int i=0; i<this->pixel_height_; i++){
     for(int j=0; j<this->pixel_width_; j++){
+      if (j == 500 && i == 400){
+        std::cout<<1<<std::endl;
+      }
       // color c = this->random_ray_aliase(entities, i, j);
       color c = this->multi_sample_aliase(entity, i, j, this->sample_level_);
       c.garmmar_correction();
@@ -174,24 +177,21 @@ ray camera::get_ray(int i, int j) const {
 }
 
 color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int depth) const {
-  if (depth<=0){
-    double a = 0.5 * (r.direction().y() + 1.0);
-    return color(
-        (1.0 - a) + 0.5 * a,
-        (1.0 - a) + 0.7 * a,
-        (1.0 - a) + 1.0 * a
-    );
-  }
+  color attenuation;
+  ray scattered;
   hit_record record;
   color c;
+  if (depth<=0){
+    this->background_->scatter(r, record, attenuation, scattered);
+    return attenuation;
+  }
   if (entities.hit(r, interval(0, 1000), record)){
     // Get the Normalize Vector 
     /*
     vec3 sphere_normal = record.normal;
     c = color(0.5*(sphere_normal.x()+1), 0.5*(sphere_normal.y()+1), 0.5*(sphere_normal.z()+1));
     */
-    color attenuation;
-    ray scattered;
+
     /*
     vec3 sphere_normal = record.normal;
     vec3 rand_direc = random_unit_vector_hemisphere(sphere_normal);
@@ -211,23 +211,21 @@ color camera::cal_pixel_color_(const hittable_list& entities, const ray& r, int 
      * _________\/_|______________|______________
      *         0.25sky 
      */ 
+         
+    color emit_color = record.mat->emitted(record.u, record.v, record.p);
     if (record.mat->scatter(r, record, attenuation, scattered)){
-      return attenuation*this->cal_pixel_color_(entities, scattered, depth-1);
+      color scatter_color = attenuation*this->cal_pixel_color_(entities, scattered, depth-1);
+      return color((scatter_color.r+emit_color.r)/255.999, (scatter_color.g+emit_color.g)/255.999, (scatter_color.b+emit_color.b)/255.999);
     }
     // color c = this->cal_pixel_color_(entities, rand_ray, depth-1);
     // c.garmmar_correction(this->gammar_coe_);    
-    return color(0,0,0);
+    return emit_color;
   } else {
     // Not Hit just the blue gradient
     // Here is Environment Light
-    double a = 0.5*(r.direction().y() + 1.0);    
-    c = color (
-      (1.0-a)+0.5*a,
-      (1.0-a)+0.7*a,
-      (1.0-a)+1.0*a
-    );
+    this->background_->scatter(r, record, attenuation, scattered);
+    return attenuation;
   }
-  return c;
 }
 
 color camera::cal_pixel_color_(const hittable& entity, const ray& r, int depth) const {
@@ -266,17 +264,18 @@ color camera::cal_pixel_color_(const hittable& entity, const ray& r, int depth) 
      * _________\/_|______________|______________
      *         0.25sky 
      */ 
+    color emit_color = record.mat->emitted(record.u, record.v, record.p);
     if (record.mat->scatter(r, record, attenuation, scattered)){
-      return attenuation*this->cal_pixel_color_(entity, scattered, depth-1);
+      color scatter_color = attenuation*this->cal_pixel_color_(entity, scattered, depth-1);
+      return color((scatter_color.r+emit_color.r)/255.999, (scatter_color.g+emit_color.g)/255.999, (scatter_color.b+emit_color.b)/255.999);
     }
     // color c = this->cal_pixel_color_(entities, rand_ray, depth-1);
     // c.garmmar_correction(this->gammar_coe_);    
-    return color(0,0,0);
+    return emit_color;
   } else {
     // Not Hit just the blue gradient
     // Here is Environment Light
     this->background_->scatter(r, record, attenuation, scattered);
     return attenuation;
   }
-  return c;
 }
