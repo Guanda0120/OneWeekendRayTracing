@@ -115,17 +115,18 @@ void checker_spheres(){
   world.add(make_shared<sphere>(point(0, 2, 0), 2, m));
 
   auto difflight = new diffuse_light(color(1,1,1));
-  world.add(make_shared<quad>(point(-2,1,0), vec3(4,0,0), vec3(0,4,0), difflight));
+  world.add(make_shared<quad>(point(2,1,0), vec3(4,0,0), vec3(0,4,0), difflight));
 
   bvh_node node = bvh_node(world);
   
   // Camera
-  point p = point(0,2,9);
+  point p = point(9,2,9);
   vec3 look_at= point(0,2,0)-p;
   look_at.normalize_vec();
   vec3 up_to = vec3(0,1,0);
   camera cam = camera(cav, pi*75/180, 100.0, p, look_at, up_to);
-  cam.set_bkg(new lambertian(color(0,0,0), "Darkness"));
+  // cam.set_bkg(new lambertian(color(0,0,0), "Darkness"));
+  cam.set_bkg(new gradiant(color(1,1,1), color(0.5,0.7,1.0), "Grad"));
 
   image img = cam.render(node);
   // const char* file_dir = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/Perlin.png";
