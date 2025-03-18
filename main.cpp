@@ -52,7 +52,7 @@ hittable_list generate_scene(){
   auto material2 = new lambertian(color(0.4, 0.2, 0.1), "mat");
   world.add(make_shared<sphere>(point(-4, 1, 0), 1.0, material2));
   auto material3 = new metal(color(0.7, 0.6, 0.5), "Mat", 0.0);
-  const char* texture_file = "D://OneWeekendRayTracing/img/earthmap1.png";
+  const char* texture_file = "D://OneWeekendRayTracing/img/earthmap.png";
   lambertian* m = new lambertian(texture_file, "earth");
   world.add(make_shared<sphere>(point(4, 1, 0), 1.0, m));
   return world;
@@ -61,7 +61,7 @@ hittable_list generate_scene(){
 void bouncing_spheres(){
   // Canvas
   double aspect_ratio = 16.0 / 9.0;
-  int image_width = 1200;
+  int image_width = 500;
   canvas cav = canvas(image_width, aspect_ratio);
   
   // initial the material
@@ -99,7 +99,7 @@ void bouncing_spheres(){
   cam.set_bkg(new gradiant(color(1,1,1), color(0.5,0.7,1.0), "Grad"));
   image img = cam.render(node);
   // const char* file_name = "C://Users/12748/Desktop/Learning/OneWeekendRayTracing/img/MotionBlur.png";
-  const char* file_name = "D://OneWeekendRayTracing/img/Checker.png";
+  const char* file_name = "D://OneWeekendRayTracing/img/MotionBlur.png";
   img.save_png(file_name);
 }
 
@@ -231,9 +231,9 @@ void simple_light() {
 
 int main(){
   auto start = std::chrono::high_resolution_clock::now();
-  // bouncing_spheres();
+  bouncing_spheres();
   // quad_render();
-  checker_spheres();
+  // checker_spheres();
   // simple_light();
   // TEST_QUAD();
   std::cout<<"Write Successful!"<<std::endl;

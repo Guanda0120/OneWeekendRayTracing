@@ -1,28 +1,49 @@
 #include "color.h"
 
-color::color():r_(0),g_(0),b_(0){};
+color::color():r(0),g(0),b(0){};
 
 color::color(float r_ratio, float g_ratio, float b_ratio)
-  : r_(r_ratio), g_(g_ratio), b_(b_ratio){};
+  : r(r_ratio), g(g_ratio), b(b_ratio){};
 
-int color::r() { return int(this->r_/color::__INT_COL_FACTOR__); }
-int color::g() { return int(this->g_/color::__INT_COL_FACTOR__); }
-int color::b() { return int(this->b_/color::__INT_COL_FACTOR__); }
+int color::r_int() { return int(this->r*color::__INT_COL_FACTOR__); }
+int color::g_int() { return int(this->g*color::__INT_COL_FACTOR__); }
+int color::b_int() { return int(this->b*color::__INT_COL_FACTOR__); }
 
 void color::write_color(std::ostream& out){
-  out<<this->r_<<' '<<this->g_<<' '<<this->b_<<'\n';
+  out<<this->r<<' '<<this->g<<' '<<this->b<<'\n';
 }
 
 void color::garmmar_correction(double garmmar_coe){
-  this->r_ = this->r_*garmmar_coe;
-  this->g_ = this->g_*garmmar_coe;
-  this->b_ = this->b_*garmmar_coe;
+  this->r = this->r*garmmar_coe;
+  this->g = this->g*garmmar_coe;
+  this->b = this->b*garmmar_coe;
 }
 
 void color::garmmar_correction(){
-  this->r_ = std::sqrt(this->r_);
-  this->g_ = std::sqrt(this->g_);
-  this->b_ = std::sqrt(this->b_);
+  this->r = std::sqrt(this->r);
+  this->g = std::sqrt(this->g);
+  this->b = std::sqrt(this->b);
+}
+
+color& color::operator+=(const color& col_2){
+  this->r += col_2.r;
+  this->g += col_2.g;
+  this->b += col_2.b;
+  return *this;
+}
+
+color& color::operator*=(const color& col_2){
+  this->r *= col_2.r;
+  this->g *= col_2.g;
+  this->b *= col_2.b;
+  return *this;
+}
+
+color& color::operator*=(const float factor){
+  this->r *= factor;
+  this->g *= factor;
+  this->b *= factor;
+  return *this;
 }
 
 color color::random(){

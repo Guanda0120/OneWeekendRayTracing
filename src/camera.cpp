@@ -86,7 +86,7 @@ image camera::render(const hittable_list& entities){
 }
 
 color camera::multi_sample_aliase(const hittable_list& entities, int i, int j, int sample_level) const {
-  int r=0, g=0, b=0;
+  color res_color = color();
   int sample_pts = sample_level*sample_level;
 
   double i_step = this->delta_height_/sample_level;
@@ -104,21 +104,16 @@ color camera::multi_sample_aliase(const hittable_list& entities, int i, int j, i
       double tm = random_double(0, this->shutter_open_);
       ray tmp_ray = ray(center, direc_vec, tm);
       color tmp_color = this->cal_pixel_color_(entities, tmp_ray, this->max_depth_-1);
-      r+=tmp_color.r;
-      g+=tmp_color.g;
-      b+=tmp_color.b;
+      res_color+=tmp_color;
     }
   }
-  color c = color();
-  c.r = int(r/sample_pts);
-  c.g = int(g/sample_pts);
-  c.b = int(b/sample_pts);
-  return c;
+  res_color*=(1.0/sample_pts);
+  return res_color;
 }
 
 
 color camera::multi_sample_aliase(const hittable& entity, int i, int j, int sample_level) const {
-  int r=0, g=0, b=0;
+  color res_color = color();
   int sample_pts = sample_level*sample_level;
 
   double i_step = this->delta_height_/sample_level;
@@ -136,16 +131,11 @@ color camera::multi_sample_aliase(const hittable& entity, int i, int j, int samp
       double tm = random_double(0, this->shutter_open_);
       ray tmp_ray = ray(center, direc_vec, tm);
       color tmp_color = this->cal_pixel_color_(entity, tmp_ray, this->max_depth_ - 1);
-      r+=tmp_color.r;
-      g+=tmp_color.g;
-      b+=tmp_color.b;
+      res_color+=tmp_color;
     }
   }
-  color c = color();
-  c.r = int(r/sample_pts);
-  c.g = int(g/sample_pts);
-  c.b = int(b/sample_pts);
-  return c;
+  res_color*=(1.0/sample_pts);
+  return res_color;
 }
 
 color camera::random_ray_aliase(const hittable_list& entities, int i, int j) const {
@@ -267,7 +257,8 @@ color camera::cal_pixel_color_(const hittable& entity, const ray& r, int depth) 
     color emit_color = record.mat->emitted(record.u, record.v, record.p);
     if (record.mat->scatter(r, record, attenuation, scattered)){
       color scatter_color = attenuation*this->cal_pixel_color_(entity, scattered, depth-1);
-      return color((scatter_color.r+emit_color.r)/255.999, (scatter_color.g+emit_color.g)/255.999, (scatter_color.b+emit_color.b)/255.999);
+      return scatter_color+emit_color;
+      // return color((scatter_color.r+emit_color.r)/255.999, (scatter_color.g+emit_color.g)/255.999, (scatter_color.b+emit_color.b)/255.999);
     }
     // color c = this->cal_pixel_color_(entities, rand_ray, depth-1);
     // c.garmmar_correction(this->gammar_coe_);    

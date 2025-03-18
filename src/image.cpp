@@ -73,27 +73,27 @@ image::image(const char* file_name){
 
   // 将图像数据转换为color对象
   for (int y = 0; y < height_; ++y) {
-      for (int x = 0; x < width_; ++x) {
-          // 如果是RGBA格式，加入Alpha通道
-        if (color_type == PNG_COLOR_TYPE_RGBA) {
-          png_bytep px_alpha = &(row_pointers[y][x * 4]);  // 每个像素有4个通道
-          double r = px_alpha[0] / 255.0;  // Red
-          double g = px_alpha[1] / 255.0;  // Green
-          double b = px_alpha[2] / 255.0;  // Blue
-          double a = px_alpha[3] / 255.0;  // Alpha
-        
-          // 将图像数据存储为color对象
-          this->image_[y * width_ + x] = color(r, g, b);  // 假设color类支持Alpha通道
-        } else {
-          // 如果是RGB格式，不处理Alpha
-          png_bytep px = &(row_pointers[y][x * 3]);  // 每个像素有3个通道
-          double r = px[0] / 255.0;
-          double g = px[1] / 255.0;
-          double b = px[2] / 255.0;
-        
-          this->image_[y * width_ + x] = color(r, g, b);
-        }
+    for (int x = 0; x < width_; ++x) {
+        // 如果是RGBA格式，加入Alpha通道
+      if (color_type == PNG_COLOR_TYPE_RGBA) {
+        png_bytep px_alpha = &(row_pointers[y][x * 4]);  // 每个像素有4个通道
+        double r = px_alpha[0] / 255.0;  // Red
+        double g = px_alpha[1] / 255.0;  // Green
+        double b = px_alpha[2] / 255.0;  // Blue
+        double a = px_alpha[3] / 255.0;  // Alpha
+      
+        // 将图像数据存储为color对象
+        this->image_[y * width_ + x] = color(r, g, b);  // 假设color类支持Alpha通道
+      } else {
+        // 如果是RGB格式，不处理Alpha
+        png_bytep px = &(row_pointers[y][x * 3]);  // 每个像素有3个通道
+        double r = px[0] / 255.0;
+        double g = px[1] / 255.0;
+        double b = px[2] / 255.0;
+      
+        this->image_[y * width_ + x] = color(r, g, b);
       }
+    }
   }
 
   // 释放内存
@@ -163,9 +163,9 @@ void image::save_png(const char* file_name){
       color c = image_[index];
       
       // 将 color 对象的 RGB 分量存储到 buffer 中
-      buffer[(y * width_ + x) * 3 + 0] = c.r;  // Red
-      buffer[(y * width_ + x) * 3 + 1] = c.g;  // Green
-      buffer[(y * width_ + x) * 3 + 2] = c.b;  // Blue
+      buffer[(y * width_ + x) * 3 + 0] = c.r_int();  // Red
+      buffer[(y * width_ + x) * 3 + 1] = c.g_int();  // Green
+      buffer[(y * width_ + x) * 3 + 2] = c.b_int();  // Blue
     }
   }
   for (int y = 0; y < height_; ++y) {
